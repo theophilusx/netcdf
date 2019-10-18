@@ -1,15 +1,4 @@
-
-# Table of Contents
-
-1.  [netcdf](#org9dbef9b)
-    1.  [Why](#org529c207)
-    2.  [Usage](#org6b0035d)
-    3.  [License](#org322ba23)
-
-
-<a id="org9dbef9b"></a>
-
-# netcdf
+* netcdf
 
 A Clojure library which wraps the Java netcdf4 library from Unidata
 
@@ -19,12 +8,9 @@ is focused on processing large netcdf data files (i.e. reading), it is unlikely
 I will add support for writing/creating netcdf files. 
 
 If you are searching for a Clojure library which is considerably more mature and
-does support writing netcdf files, check out [netcdf-clj](https://github.com/r0man/netcdf-clj)
+does support writing netcdf files, check out [[https://github.com/r0man/netcdf-clj][netcdf-clj]]
 
-
-<a id="org529c207"></a>
-
-## Why
+** Why
 
 Why write another Clojure wrapper for the netcdf4 Java library?
 
@@ -38,20 +24,13 @@ I was using it was slow or inefficient. My suspicion is it is the latter.
 To learn more about the Java library and Clojure interop, the solution is to try
 implementing my own wrapper library. 
 
-
-<a id="org6b0035d"></a>
-
-## Usage
+** Usage
 
 FIXME
 
-
-<a id="org322ba23"></a>
-
-## License
+** License
 
 Copyright © 2019 Tim Cross
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
-

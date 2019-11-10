@@ -3,7 +3,8 @@
             [netcdf.dimensions :as dimensions]
             [netcdf.ranges :as ranges])
   (:import [ucar.nc2 NetcdfFile Variable]
-           [ucar.ma2 DataType]))
+           [ucar.ma2 DataType]
+           [ucar.nc2.util EscapeStrings]))
 
 (defn variable-attributes [variable]
   (map #'attributes/attribute->map (.getAttributes variable)))
@@ -99,3 +100,10 @@
                              (map
                               #(dimensions/dimension->string % (str indent "\t"))
                               (:dimensions v-map))))))
+
+(defn variable
+  "Find a variable by either full name or by supplying group and short name."
+  ([nc full-name]
+   (.findVariable nc (EscapeStrings/escapeDAPIdentifier full-name)))
+  ([nc group short-name]
+   (.findVariable nc group short-name)))

@@ -60,3 +60,16 @@
                                      #(group->string % (str indent "\t"))
                                      (:children grp-map))))
           ""))))
+
+(defn root-group
+  "Returns a map for the root group containing keys for `:name`, `:root?`, 
+  `:attributes`, `:dimensions`, `:variables`, `:obj` and `:children`. The 
+  `nc` argument is a netcdf file object returned from a call to `open` or 
+  `open-in-memory`. "  
+  [nc]
+  (group->map (.getRootGroup nc)))
+
+(defn group
+  "return a group given the full group name."
+  [nc group-name]
+  (group->map (.findGroup nc group-name)))

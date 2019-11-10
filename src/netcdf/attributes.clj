@@ -1,6 +1,7 @@
 (ns netcdf.attributes
   (:import [ucar.nc2 NetcdfFile Attribute]
-           [ucar.ma2 DataType]))
+           [ucar.ma2 DataType]
+           [ucar.nc2.util EscapeStrings]))
 
 (defn attribute-name
   "Return the attribute name"
@@ -50,3 +51,24 @@
   ([a-map indent]
    (str indent (:name a-map) 
         ": " (:value a-map))))
+
+(defn attribute
+  "Find an attribute given the full attribute name. `nc` is a
+  `ucar.nc2.NetcdfFile` object. `attr-name` is a string. Returns
+  `ucar.mc2.Attribute`."
+  [nc attr-name]
+  (.findAttribute nc (EscapeStrings/escapeDAPIdentifier attr-name)))
+
+(defn global-attribute
+  "Return a global attribute."
+  [nc attr-name]
+  (.findGlobalAttribute nc attr-name))
+
+(defn get-attribute-value-ignore-case
+  "Find a global or variable attribute value. If not found, return default
+  value. If variable is specified, look only for an attributre in that
+  variable."
+  ([nc attr-name default-val]
+   (get-attribute-value-ignore-case nc nil attr-name default-val))
+  ([nc var-name attr-name default-val]
+   (.findAttValueIgnoreCase nc var-name attr-name default-val)))

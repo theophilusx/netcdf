@@ -36,8 +36,8 @@
 
 (defn dimensions
   "Returns sequence of maps representing the files dimensions"
-  [netcdf-file]
-  (dimensions->vector (.getDimensions netcdf-file)))
+  [nc]
+  (dimensions->vector (.getDimensions nc)))
 
 (defn dimension->string
   ([d-map]
@@ -46,3 +46,9 @@
    (str indent "Name: " (:name d-map) " Length: " (:length d-map)
         " Unlimited? " (:unlimited? d-map)
         " Varying? " (:varying? d-map))))
+
+(defn dimension
+  "Reurn the specified dimension"
+  [nc dimension-name]
+  (.findDimension nc dimension-name))
+

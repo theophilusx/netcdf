@@ -3,17 +3,17 @@
            [ucar.ma2 DataType]
            [ucar.nc2.util EscapeStrings]))
 
-(defn attribute-name
+(defn -attribute-name
   "Return the attribute name"
   [attr]
   (.getName attr))
 
-(defn attribute-length
+(defn -attribute-length
   "Return length of the attribute. Value > 1 = array"
   [attr]
   (.getLength attr))
 
-(defn attribute-value
+(defn -attribute-value
   "Return attribute value - string, numeric or array"
   [attr]
   (let [dt (.getDataType attr)]
@@ -23,7 +23,7 @@
            (not (.isArray attr))) (.getNumericValue attr)
       :default                    (.getValues attr))))
 
-(defn attribute-type
+(defn -attribute-type
   "Return symbol representing the attribute type"
   [attr]
   (keyword (.toString (.getDataType attr))))
@@ -31,19 +31,15 @@
 (defn attribute->map
   "Return attribute as a map with keys :name, :type, :length and :value"
   [attr]
-  {:name (attribute-name attr)
-   :type (attribute-type attr)
-   :length (attribute-length attr)
-   :value (attribute-value attr)})
+  (when attr
+    {:name   (-attribute-name attr)
+     :type   (-attribute-type attr)
+     :length (-attribute-length attr)
+     :value  (-attribute-value attr)}))
 
-(defn attributes->vector [attr-list]
+(defn -attributes->vector [attr-list]
   (vec (map #'attribute->map attr-list)))
 
-(defn global-attributes
-  "Return vector of global attributes as maps. `nc` is a `ucar.nc2.NetcdfFile`
-  object"
-  [nc]
-  (attributes->vector (.getGlobalAttributes nc)))
 
 (defn attribute->string
   ([a-map]
@@ -54,21 +50,27 @@
 
 (defn attribute
   "Find an attribute given the full attribute name. `nc` is a
-  `ucar.nc2.NetcdfFile` object. `attr-name` is a string. Returns
-  `ucar.mc2.Attribute`."
+  `ucar.nc2.NetcdfFile` object. `attr-name` is a full attribute name. The
+  attribute may be nested in multiple groups and/or structures. A `.` is used to
+  separate structures, a `/` is prefixed to grups and an `@` is prefixed to
+  attributes. e.g.
+  /group/variable@attribute
+  /group/variable/structure.member@attribute
+  Returns `ucar.mc2.Attribute` if attribute is found, `nil` otherwise."
   [nc attr-name]
-  (.findAttribute nc (EscapeStrings/escapeDAPIdentifier attr-name)))
+  (attribute->map (.findAttribute nc attr-name)))
 
 (defn global-attribute
-  "Return a global attribute."
+  "Return a global attribute as a map with keys of `:name`, `:type`, `:length` and
+  `:value`. The `nc` argument is a `ucar.nc2.NetcdfFile` object and `attr-name`
+  is a case sensitive attribute name."
   [nc attr-name]
-  (.findGlobalAttribute nc attr-name))
+  (attribute->map (.findGlobalAttribute nc attr-name)))
 
-(defn get-attribute-value-ignore-case
-  "Find a global or variable attribute value. If not found, return default
-  value. If variable is specified, look only for an attributre in that
-  variable."
-  ([nc attr-name default-val]
-   (get-attribute-value-ignore-case nc nil attr-name default-val))
-  ([nc var-name attr-name default-val]
-   (.findAttValueIgnoreCase nc var-name attr-name default-val)))
+(defn global-attributes
+  "Return vector of global attributes as maps. `nc` is a `ucar.nc2.NetcdfFile`
+  object returns from call to `open`, `open-file-in-memory`, `with-netcdf` or
+  `with-memory-netecdf`."
+  [nc]
+  (-attributes->vector (.getGlobalAttributes nc)))
+

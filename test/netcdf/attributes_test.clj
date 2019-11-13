@@ -15,7 +15,7 @@
         (is (vector? attributes)))
       (testing "returns vector of maps with correct keys"
         (is (every? (fn [a]
-                      (= [:name :type :length :value] (keys a)))
+                      (= [:name :type :length :value :obj] (keys a)))
                     attributes))))))
 
 (deftest global-attribute-test
@@ -24,7 +24,7 @@
       (testing "return value is a map"
         (is (map? ct)))
       (testing "has correct keys"
-        (is (= [:name :type :length :value] (keys ct))))
+        (is (= [:name :type :length :value :obj] (keys ct))))
       (testing "Has correct values for each key"
         (is (= (:name ct) "createTime"))
         (is (= (:type ct) :int))
@@ -39,7 +39,7 @@
       (testing "returns a map"
         (is (map? cts)))
       (testing "has correct keys"
-        (is (= [:name :type :length :value] (keys cts))))
+        (is (= [:name :type :length :value :obj] (keys cts))))
       (testing "has correct values"
         (is (= (:name cts) "creationTimeString"))
         (is (= (:type cts) :String))

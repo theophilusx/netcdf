@@ -35,7 +35,8 @@
     {:name   (-attribute-name attr)
      :type   (-attribute-type attr)
      :length (-attribute-length attr)
-     :value  (-attribute-value attr)}))
+     :value  (-attribute-value attr)
+     :obj attr}))
 
 (defn -attributes->vector [attr-list]
   (vec (map #'attribute->map attr-list)))

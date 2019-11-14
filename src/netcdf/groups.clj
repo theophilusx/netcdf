@@ -11,12 +11,12 @@
                  "Root"
                  (.getShortName grp))
    :root? (.isRoot grp)
-   :attributes (attributes/attributes->vector (.getAttributes grp))
-   :dimensions (dimensions/dimensions->vector (.getDimensions grp))
-   :variables (variables/variables->vector (.getVariables grp))
+   :attributes (attributes/-attributes->vector (.getAttributes grp))
+   :dimensions (dimensions/-dimensions->vector (.getDimensions grp))
+   :variables (variables/-variables->vector (.getVariables grp))
    :obj grp})
 
-(defn group->map
+(defn -group->map
   "Returns a map representing a NetCDF group. The map contains the keys 
   `name` = group name, `root` = true if this is the root group, `attributes` 
   = vector of group attributes, `dimensions` = dimensions of variables in the group
@@ -27,10 +27,10 @@
         children (.getGroups grp)]
     (if (empty? children)
       (assoc base :children nil)
-      (assoc base :children (vec (map #'group->map children))))))
+      (assoc base :children (mapv #'-group->map children)))))
 
 (defn groups->vector [grp-list]
-  (vec (map #'group->map grp-list)))
+  (mapv #'-group->map grp-list))
 
 (defn group->string
   ([grp-map]
@@ -67,9 +67,9 @@
   `nc` argument is a netcdf file object returned from a call to `open` or 
   `open-in-memory`. "  
   [nc]
-  (group->map (.getRootGroup nc)))
+  (-group->map (.getRootGroup nc)))
 
 (defn group
   "return a group given the full group name."
   [nc group-name]
-  (group->map (.findGroup nc group-name)))
+  (-group->map (.findGroup nc group-name)))

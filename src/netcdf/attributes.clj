@@ -28,7 +28,7 @@
   [attr]
   (keyword (.toString (.getDataType attr))))
 
-(defn attribute->map
+(defn -attribute->map
   "Return attribute as a map with keys :name, :type, :length and :value"
   [attr]
   (when attr
@@ -39,7 +39,7 @@
      :obj attr}))
 
 (defn -attributes->vector [attr-list]
-  (vec (map #'attribute->map attr-list)))
+  (vec (map #'-attribute->map attr-list)))
 
 
 (defn attribute->string
@@ -59,14 +59,14 @@
   /group/variable/structure.member@attribute
   Returns `ucar.mc2.Attribute` if attribute is found, `nil` otherwise."
   [nc attr-name]
-  (attribute->map (.findAttribute nc attr-name)))
+  (-attribute->map (.findAttribute nc attr-name)))
 
 (defn global-attribute
   "Return a global attribute as a map with keys of `:name`, `:type`, `:length` and
   `:value`. The `nc` argument is a `ucar.nc2.NetcdfFile` object and `attr-name`
   is a case sensitive attribute name."
   [nc attr-name]
-  (attribute->map (.findGlobalAttribute nc attr-name)))
+  (-attribute->map (.findGlobalAttribute nc attr-name)))
 
 (defn global-attributes
   "Return vector of global attributes as maps. `nc` is a `ucar.nc2.NetcdfFile`

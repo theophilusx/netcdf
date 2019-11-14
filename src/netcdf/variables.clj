@@ -6,73 +6,55 @@
            [ucar.ma2 DataType]
            [ucar.nc2.util EscapeStrings]))
 
-(defn variable-attributes [variable]
-  (map #'attributes/attribute->map (.getAttributes variable)))
+(defn -variable-attributes [variable]
+  (mapv #'attributes/-attribute->map (.getAttributes variable)))
 
-(defn variable-type
+(defn -variable-type
   "Return symbol representing the variable type"
   [variable]
-  (let [type (keyword (str (.getDataType variable)))]
-    (cond
-      (= :double type) (if (.isUnsigned variable)
-                         :unsigned-double
-                         type)
-      (= :float type) (if (.isUnsigned variable)
-                        :unsigned-float
-                        type)
-      (= :int type) (if (.isUnsigned variable)
-                      :unsigned-int
-                      type)
-      (= :long type) (if (.isUnsigned variable)
-                       :unsigned-long
-                       type)
-      (= :short type) (if (.isUnsigned variable)
-                        :unsigned-short
-                        type)
-      :default type)))
+  (keyword (str (.getDataType variable))))
 
-(defn variable-description [variable]
+(defn -variable-description [variable]
   (.getDescription variable))
 
-(defn variable-dap-name [variable]
+(defn -variable-dap-name [variable]
   (Variable/getDAPName variable))
 
-(defn variable-dimensions [variable]
-  (map #'dimensions/dimension->map (.getDimensions variable)))
+(defn -variable-dimensions [variable]
+  (mapv #'dimensions/-dimension->map (.getDimensions variable)))
 
-(defn variable-element-size [variable]
+(defn -variable-element-size [variable]
   (.getElementSize variable))
 
-(defn variable-ranges [variable]
-  (ranges/ranges->vector (.getRanges variable)))
+(defn -variable-ranges [variable]
+  (ranges/-ranges->vector (.getRanges variable)))
 
-(defn variable-rank [variable]
+(defn -variable-rank [variable]
   (.getRank variable))
 
-(defn variable-shape [variable]
+(defn -variable-shape [variable]
   (vec (seq (.getShape variable))))
 
-(defn variable-size [variable]
+(defn -variable-size [variable]
   (.getSize variable))
 
-(defn variable->map [variable]
-  {:description (variable-description variable)
-   :name (variable-dap-name variable)
-   :type (variable-type variable)
-   :attributes (variable-attributes variable)
-   :dimensions (variable-dimensions variable)
-   :element-size (variable-element-size variable)
-   :ranges (variable-ranges variable)
-   :rank (variable-rank variable)
-   :shape (variable-shape variable)
-   :size (variable-size variable)
-   :obj variable})
+(defn -variable->map [variable]
+  (when variable
+    {:description  (-variable-description variable)
+     :name         (-variable-dap-name variable)
+     :type         (-variable-type variable)
+     :attributes   (-variable-attributes variable)
+     :dimensions   (-variable-dimensions variable)
+     :element-size (-variable-element-size variable)
+     :ranges       (-variable-ranges variable)
+     :rank         (-variable-rank variable)
+     :shape        (-variable-shape variable)
+     :size         (-variable-size variable)
+     :obj          variable}))
 
-(defn variables->vector [var-list]
-  (vec (map #'variable->map var-list)))
+(defn -variables->vector [var-list]
+  (mapv #'-variable->map var-list))
 
-(defn variables [netcdf-file]
-  (variables->vector (.getVariables netcdf-file)))
 
 (defn variable->string
   ([v-map]
@@ -104,6 +86,9 @@
 (defn variable
   "Find a variable by either full name or by supplying group and short name."
   ([nc full-name]
-   (.findVariable nc (EscapeStrings/escapeDAPIdentifier full-name)))
+   (-variable->map (.findVariable nc (EscapeStrings/escapeDAPIdentifier full-name))))
   ([nc group short-name]
-   (.findVariable nc group short-name)))
+   (-variable->map (.findVariable nc group short-name))))
+
+(defn variables [nc]
+  (-variables->vector (.getVariables nc)))

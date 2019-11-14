@@ -33,7 +33,7 @@
      :obj        dim}))
 
 (defn -dimensions->vector [dim-list]
-  (vec (map #'-dimension->map dim-list)))
+  (mapv #'-dimension->map dim-list))
 
 
 (defn dimension->string

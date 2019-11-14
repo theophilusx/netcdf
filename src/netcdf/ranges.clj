@@ -33,7 +33,7 @@
   "Takes a list of Netcdf range objects and converts it to a vector of range
   maps"
   [range-list]
-  (vec (map #'-range->map range-list)))
+  (mapv #'-range->map range-list))
 
 (defn range->string
   "Converts a range map to a string suitable for display."

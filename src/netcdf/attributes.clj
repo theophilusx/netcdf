@@ -39,7 +39,7 @@
      :obj attr}))
 
 (defn -attributes->vector [attr-list]
-  (vec (map #'-attribute->map attr-list)))
+  (mapv #'-attribute->map attr-list))
 
 
 (defn attribute->string

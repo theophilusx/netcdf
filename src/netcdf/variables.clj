@@ -1,7 +1,8 @@
 (ns netcdf.variables
   (:require [netcdf.attributes :as attributes]
             [netcdf.dimensions :as dimensions]
-            [netcdf.ranges :as ranges])
+            [netcdf.ranges :as ranges]
+            [clojure.string :as string])
   (:import [ucar.nc2 NetcdfFile Variable]
            [ucar.ma2 DataType]
            [ucar.nc2.util EscapeStrings]))
@@ -12,7 +13,7 @@
 (defn -variable-type
   "Return symbol representing the variable type"
   [variable]
-  (keyword (str (.getDataType variable))))
+  (keyword (string/lower-case (str (.getDataType variable)))))
 
 (defn -variable-description [variable]
   (.getDescription variable))

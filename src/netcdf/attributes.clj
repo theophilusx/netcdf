@@ -1,7 +1,8 @@
 (ns netcdf.attributes
   (:import [ucar.nc2 NetcdfFile Attribute]
            [ucar.ma2 DataType]
-           [ucar.nc2.util EscapeStrings]))
+           [ucar.nc2.util EscapeStrings])
+  (:require [clojure.string :as string]))
 
 (defn -attribute-name
   "Return the attribute name"
@@ -26,7 +27,7 @@
 (defn -attribute-type
   "Return symbol representing the attribute type"
   [attr]
-  (keyword (.toString (.getDataType attr))))
+  (keyword (string/lower-case (.toString (.getDataType attr)))))
 
 (defn -attribute->map
   "Return attribute as a map with keys :name, :type, :length and :value"

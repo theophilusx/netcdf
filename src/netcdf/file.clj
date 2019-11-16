@@ -41,16 +41,6 @@
   (.close nc)
   true)
 
-(defn can-open?
-  "Test to see if we can open a NeetCDF file without actually opening
-  it. `location` is a path to a `NetcdfFile` object."
-  [location]
-  (let [file (NetcdfFile/canonicalizeUriString location)]
-    (try
-      (NetcdfFile/canOpen file)
-      (catch Exception e
-        false))))
-
 (defn type-id
   "Get the file type id for the underlying data source. The `nc` argument is a
   `NetcdfFile` object returned from a call to `open` or `open-in-memory`"

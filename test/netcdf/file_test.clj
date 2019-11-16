@@ -24,10 +24,6 @@
   (testing "Closing a non-existing object throws exception"
     (is (thrown? AssertionError (sut/close nil)))))
 
-(deftest can-open-non-existing-test
-  (testing "Can open returns false for non-existent file"
-    (is (= (sut/can-open? "no-such-file.nc") false))))
-
 (deftest open-file-test
   (testing (str "open-file: Testing using file " @test-file)
     (let [nc (sut/open @test-file)]
@@ -39,10 +35,6 @@
     (let [nc (sut/open-in-memory @test-file)]
       (is (= (instance? NetcdfFile nc) true))
       (is (= (sut/close nc) true)))))
-
-(deftest can-open-file-test
-  (testing (str "can-open: Testing with file " @test-file)
-    (is (sut/can-open? @test-file))))
 
 (deftest type-id-test
   (testing (str "type-id: Testing with file " @test-file)
@@ -78,12 +70,10 @@
   (open-non-existing-test)
   (open-in-memory-non-existing-test)
   (close-non-existing-test)
-  (can-open-non-existing-test)
   (doseq [f test-files]
     (reset! test-file (str (:test-data conf) "/" f))
     (open-file-test)
     (open-file-in-memory-test)
-    (can-open-file-test)
     (type-id-test)
     (location-test)
     (iosp-info-test)

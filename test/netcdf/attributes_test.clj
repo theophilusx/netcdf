@@ -1,7 +1,7 @@
 (ns netcdf.attributes-test
   (:require [netcdf.attributes :as sut]
             [clojure.test :refer [deftest testing is]]
-            [netcdf.file :refer [with-netcdf]]
+            [netcdf.core :refer [with-netcdf]]
             [cprop.core :refer [load-config]]
             [netcdf.keys :as key]))
 

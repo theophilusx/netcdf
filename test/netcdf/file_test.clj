@@ -6,80 +6,89 @@
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))
 
-(def test-file (str (:test-data conf) "/test.nc"))
+(def test-files ["test.nc" "test_hgroups.nc" "testrh.nc"
+                 "test_echam_spectral-deflated.nc" "OMI-Aura_L2-example.nc"
+                 "access-s.nc"])
 
-(deftest open-file
-  (testing "open and close existing file"
-    (let [nc (sut/open test-file)]
-      (is (= (instance? NetcdfFile nc) true))
-      (is (= (sut/close nc) true))))
-  (testing "open non-existing file throws exception"
-    (is (thrown? Exception (sut/open "no-such-file"))))
-  (testing "close invalid nc object throws exception"
-    (is (thrown? AssertionError (sut/close nil)))))
+(def test-file (atom ""))
 
-(deftest open-file-in-memory
-  (testing "open in memory file and close for existing file"
-    (let [nc (sut/open-in-memory test-file)]
-      (is (= (instance? NetcdfFile nc) true))
-      (is (= (sut/close nc) true))))
+(deftest open-non-existing-test
+  (testing "Opening a non-existent file throws exception"
+    (is (thrown? Exception (sut/open "no-such-file")))))
+
+(deftest open-in-memory-non-existing-test
   (testing "open in memory non-existing file throws exception"
-    (is (thrown? Exception (sut/open-in-memory "no-such-file"))))
-  (testing "close invalid nc object throws exception"
+    (is (thrown? Exception (sut/open-in-memory "no-such-file")))))
+
+(deftest close-non-existing-test
+  (testing "Closing a non-existing object throws exception"
     (is (thrown? AssertionError (sut/close nil)))))
 
-(deftest can-open-file
-  (testing "Can open valid file returns true"
-    (is (= (sut/can-open? test-file) true)))
+(deftest can-open-non-existing-test
   (testing "Can open returns false for non-existent file"
     (is (= (sut/can-open? "no-such-file.nc") false))))
 
-(deftest get-type-id
-  (testing "Can get file type id from existing file"
-    (let [nc (sut/open test-file)]
-      (is (= (sut/type-id nc) "NetCDF"))
-      (sut/close nc)))
-  (testing "type-id throws exception for bad nc"
-    (is (thrown? AssertionError (sut/type-id nil)))))
+(deftest open-file-test
+  (testing (str "open-file: Testing using file " @test-file)
+    (let [nc (sut/open @test-file)]
+      (is (= (instance? NetcdfFile nc) true))
+      (is (= (sut/close nc) true)))))
 
-(deftest get-location
-  (testing "can get location of nc object"
-    (let [nc (sut/open test-file)]
-      (is (= (sut/location nc) test-file))
-      (sut/close nc)))
-  (testing "location throws assertion error for bad nc"
-    (is (thrown? AssertionError (sut/location nil)))))
+(deftest open-file-in-memory-test
+  (testing (str "open-in-memory: Testing with file " @test-file)
+    (let [nc (sut/open-in-memory @test-file)]
+      (is (= (instance? NetcdfFile nc) true))
+      (is (= (sut/close nc) true)))))
 
-(deftest get-iosp-info
-  (testing "return map of IOSP info for valid nc"
-    (let [nc (sut/open test-file)]
+(deftest can-open-file-test
+  (testing (str "can-open: Testing with file " @test-file)
+    (is (sut/can-open? @test-file))))
+
+(deftest type-id-test
+  (testing (str "type-id: Testing with file " @test-file)
+    (let [nc (sut/open @test-file)]
+      (is (string? (sut/type-id nc)))
+      (sut/close nc))))
+
+(deftest location-test
+  (testing (str "location: Testing with file " @test-file)
+    (let [nc (sut/open @test-file)]
+      (is (= (sut/location nc) @test-file))
+      (sut/close nc))))
+
+(deftest iosp-info-test
+  (testing (str "isop-info: Testing with file " @test-file)
+    (let [nc (sut/open @test-file)]
       (is (map? (sut/iosp-info nc)))
-      (sut/close nc)))
-  (testing "throws assertion error for invalid nc"
-    (is (thrown? AssertionError (sut/iosp-info nil)))))
+      (sut/close nc))))
 
-(deftest get-file-type-description
-  (testing "returns string for valid nc"
-    (let [nc (sut/open test-file)]
-      (is (= (sut/file-type-description nc) "NetCDF-3/CDM"))
-      (sut/close nc)))
-  (testing "thows assertion error for invalid nc"
-    (is (thrown? AssertionError (sut/file-type-description nil)))))
+(deftest file-type-description-test
+  (testing (str "file-type-description: Testing with file " @test-file)
+    (let [nc (sut/open @test-file)]
+      (is (string? (sut/file-type-description nc)))
+      (sut/close nc))))
 
-(deftest get-file-type-version
-  (testing "returns string representing file type version"
-    (let [nc (sut/open test-file)]
-      (is (= (sut/file-type-version nc) "N/A"))
-      (sut/close nc)))
-  (testing "thorws assertion error for bad nc"
-    (is (thrown? AssertionError (sut/file-type-description nil)))))
+(deftest file-type-version-test
+  (testing (str "file-type-version: Testing with file " @test-file)
+    (let [nc (sut/open @test-file)]
+      (is (string? (sut/file-type-version nc)))
+      (sut/close nc))))
 
-(deftest with-netcdf-test
-  (testing "with-netcdf file reads file type details"
-    (sut/with-netcdf [fobj test-file]
-      (is (= (sut/file-type-description fobj) "NetCDF-3/CDM")))))
+(deftest file-testing
+  (open-non-existing-test)
+  (open-in-memory-non-existing-test)
+  (close-non-existing-test)
+  (can-open-non-existing-test)
+  (doseq [f test-files]
+    (reset! test-file (str (:test-data conf) "/" f))
+    (open-file-test)
+    (open-file-in-memory-test)
+    (can-open-file-test)
+    (type-id-test)
+    (location-test)
+    (iosp-info-test)
+    (file-type-description-test)
+    (file-type-version-test)))
 
-(deftest with-memory-netcdf-test
-  (testing "with-memory-netcdf executes"
-    (sut/with-memory-netcdf [f test-file]
-      (is (= (sut/file-type-description f) "NetCDF-3/CDM")))))
+(defn test-ns-hook []
+  (file-testing))

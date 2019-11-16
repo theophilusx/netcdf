@@ -7,11 +7,15 @@
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))
 
-(def test-file (str (:test-data conf) "/test.nc"))
+(def test-files ["test.nc" "test_hgroups.nc" "testrh.nc"
+                 "test_echam_spectral-deflated.nc" "OMI-Aura_L2-example.nc"
+                 "access-s.nc"])
+
+(def test-file (atom ""))
 
 (deftest root-group-test
-  (with-netcdf
-    [nc test-file]
+  (testing (str "Testing with file " @test-file)
+    (with-netcdf [nc @test-file]
     (let [g (sut/root-group nc)]
       (testing "group is a map with correct keys"
         (is (map? g))
@@ -33,4 +37,12 @@
                         (= [:description :element-size :name :rank :type
                             :dimensions :size :shape :ranges :obj :attributes]
                            (keys v)))
-                      (:variables g)))))))
+                      (:variables g))))))))
+
+(deftest group-testing
+  (doseq [f test-files]
+    (reset! test-file (str (:test-data conf) "/" f))
+    (root-group-test)))
+
+(defn test-ns-hook []
+  (group-testing))

@@ -2,15 +2,14 @@
   (:require [netcdf.dimensions :as sut]
             [clojure.test :refer [deftest testing is]]
             [netcdf.file :refer [with-netcdf]]
-            [cprop.core :refer [load-config]]))
+            [cprop.core :refer [load-config]]
+            [netcdf.keys :as key]))
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))
 
 (def test-files ["test.nc" "test_hgroups.nc" "testrh.nc"
                  "test_echam_spectral-deflated.nc" "OMI-Aura_L2-example.nc"
                  "access-s.nc"])
-
-(def dimension-keys [:name :length :unlimited? :varying? :obj])
 
 (def test-file (atom ""))
 
@@ -24,7 +23,7 @@
           (is (> (count dim) 0)))
         (testing "returned vector of maps with correct keys"
           (is (every? (fn [d]
-                        (=  dimension-keys (keys d)))
+                        (every? key/dimensions (keys d)))
                       dim)))))))
 
 (deftest dimension-test
@@ -35,7 +34,7 @@
         (doseq [d d-names]
           (when-let [dim (sut/dimension nc d)]
             (testing (str "dimension " d)
-              (is (= dimension-keys (keys dim)))
+              (is (every? key/dimensions (keys dim)))
               (is (= (:name dim) d))
               (is (number? (:length dim)))
               (is (boolean? (:unlimited? dim)))

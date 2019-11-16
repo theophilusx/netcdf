@@ -2,7 +2,8 @@
   (:require [netcdf.variables :as sut]
             [clojure.test :refer [deftest testing is]]
             [netcdf.file :refer [with-netcdf]]
-            [cprop.core :refer [load-config]]))
+            [cprop.core :refer [load-config]]
+            [netcdf.keys :as key]))
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))
 
@@ -12,18 +13,6 @@
 
 (def test-file (atom ""))
 
-(def variable-keys [:description :element-size :name :rank :type
-                    :dimensions :size :shape :ranges :obj :attributes])
-
-(def variable-types #{:byte :char :double :enum1 :enum2 :enum4 :float :int
-                      :long :object :opaque :sequence :short :string :structure})
-
-(def dimension-keys [:name :length :unlimited? :varying? :obj])
-
-(def range-keys [:name :first :last :length :stride :obj])
-
-(def attribute-keys [:name :type :length :value :obj])
-
 (deftest variables-test
   (testing (str "Test with file " @test-file)
     (with-netcdf [nc @test-file]
@@ -32,7 +21,7 @@
           (is (vector? v)))
         (testing "return vector consists of maps with correct keys"
           (is (every? (fn [vm]
-                        (= variable-keys (keys vm)))
+                        (every? key/variables (keys vm)))
                       v)))))))
 
 (deftest variable-test
@@ -44,7 +33,7 @@
           (if-let [vm (sut/variable nc (str "/" v))]
             (do
               (testing (str "variable " v " has correct keys")
-              (is (= variable-keys (keys vm))))
+              (is (every? key/variables (keys vm))))
             (testing (str "variable " v " description is a string or nil")
               (is (or (nil? (:description vm))
                       (string? (:description vm)))))
@@ -55,12 +44,12 @@
             (testing (str "variable " v " rank is an integer")
               (is (integer? (:rank vm))))
             (testing (str "variable " v " has valid type")
-              (is (contains? variable-types (:type vm))))
+              (is (contains? key/variable-types (:type vm))))
             (testing (str "variable " v " dimensions is a vector of 1 or more")
               (is (vector? (:dimensions vm)))
               (is (>= (count (:dimensions vm)) 0))
               (is (every? (fn [d]
-                            (= dimension-keys (keys d)))
+                            (every? key/dimensions (keys d)))
                           (:dimensions vm))))
             (testing (str "variable " v " has a positive size")
               (is (> (:size vm) 0)))
@@ -69,12 +58,12 @@
             (testing (str "variable " v " has valid ranges")
               (is (vector? (:ranges vm)))
               (is (every? (fn [r]
-                            (= range-keys (keys r)))
+                            (every? key/ranges (keys r)))
                           (:ranges vm))))
             (testing (str "variable " v " has valid attributes")
               (is (vector? (:attributes vm)))
               (is (every? (fn [a]
-                            (= attribute-keys (keys a)))
+                            (every? key/attributes (keys a)))
                           (:attributes vm)))))
             (do
               (println (str "Error: Failed to retrieve variable " v))

@@ -2,7 +2,8 @@
   (:require [netcdf.attributes :as sut]
             [clojure.test :refer [deftest testing is]]
             [netcdf.file :refer [with-netcdf]]
-            [cprop.core :refer [load-config]]))
+            [cprop.core :refer [load-config]]
+            [netcdf.keys :as key]))
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))
 
@@ -12,11 +13,6 @@
 
 (def test-file (atom ""))
 
-(def attribute-keys [:name :type :length :value :obj])
-
-(def attribute-types #{:byte :char :double :enum1 :enum2 :enum4 :float :int
-                       :long :object :opaque :sequence :short :string :structure})
-
 (deftest global-attributes-test
   (testing (str "Test with file " @test-file)
     (with-netcdf [nc @test-file]
@@ -25,7 +21,7 @@
           (is (vector? attributes)))
         (testing "returns vector of maps with correct keys"
           (is (every? (fn [a]
-                        (= attribute-keys (keys a)))
+                        (every? key/attributes (keys a)))
                       attributes)))))))
 
 (deftest global-attribute-value-test
@@ -40,10 +36,10 @@
             (testing (str "attribute " a " value is a maps")
               (is (map? attr)))
             (testing (str "attribute " a " has correct keys")
-              (is (= attribute-keys (keys attr))))
+              (is (every? key/attributes (keys attr))))
             (testing (str "attribute " a " has acceptable values")
               (is (= (:name attr) a))
-              (is (contains? attribute-types (:type attr)))
+              (is (contains? key/attribute-types (:type attr)))
               (is (number? (:length attr)))
               (is (not (nil? (:value attr)))))))))))
 
@@ -57,10 +53,10 @@
             (testing (str "attribute " a " is a map")
               (is (map? attr)))
             (testing (str "attribute " a " has correct keys")
-              (is (= attribute-keys (keys attr))))
+              (is (every? key/attributes (keys attr))))
             (testing (str "attribute " a " has acceptable values")
               (is (= (:name attr) a))
-              (is (contains? attribute-types (:type attr)))
+              (is (contains? key/attribute-types (:type attr)))
               (is (number? (:length attr)))
               (is (not (nil? (:value attr)))))))))))
 

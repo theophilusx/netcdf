@@ -1,2 +1,2 @@
-{:known-macros [[netcdf.file/with-netcdf [name file]]
-                [netcdf.file/with-memory-netcdf [name file]]]}
+{:known-macros [[netcdf.core/with-netcdf [name file]]
+                [netcdf.core/with-memory-netcdf [name file]]]}

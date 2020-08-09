@@ -3,9 +3,9 @@
  {"unidata"
   {:url "https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases"}}
  :deps {org.clojure/clojure {:mvn/version "1.10.1"}
-        edu.ucar/netcdf4 {:mvn/version "5.2.0"
+        edu.ucar/netcdf4 {:mvn/version "5.3.3"
                           :exclusions [org.apache.httpcomponents/httpclient]}
-        org.clojure/tools.logging {:mvn/version "0.5.0"}
+        org.clojure/tools.logging {:mvn/version "1.1.0"}
         ch.qos.logback/logback-classic {:mvn/version "1.2.3"}}
  :aliases
  {:test {:extra-paths ["test"]

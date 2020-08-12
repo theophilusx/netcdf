@@ -4,7 +4,7 @@
 (defn -dimension-name
   "Return dimension name"
   [^Dimension dim]
-  (.getName dim))
+  (.getFullName dim))
 
 (defn -dimension-length
   "Return length of a dimension"

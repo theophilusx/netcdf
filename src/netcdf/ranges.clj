@@ -1,26 +1,26 @@
 (ns netcdf.ranges
   (:import [ucar.ma2 Range]))
 
-(defn -range-name [range]
+(defn -range-name [^Range range]
   (.getName range))
 
-(defn -range-first [range]
+(defn -range-first [^Range range]
   (.first range))
 
-(defn -range-last [range]
+(defn -range-last [^Range range]
   (.last range))
 
-(defn -range-length [range]
+(defn -range-length [^Range range]
   (.length range))
 
-(defn -range-stride [range]
+(defn -range-stride [^Range range]
   (.stride range))
 
 (defn -range->map
   "Converts a Netcdf range object into a map with keys for `name`, `first`,
   `last`, `length`, `stride` and `obj`. The `name` value may be nil and `obj`
   contains the original Netcdf range object"
-  [range]
+  [^Range range]
   (when range
     {:name   (-range-name range)
      :first  (-range-first range)
@@ -54,7 +54,10 @@
   ([start end]
    (-range->map (Range. start end)))
   ([start end stride]
-   (-range->map (Range. start end stride)))
-  ([rname start end stride]
-   (-range->map (Range. rname start end stride))))
+   (-range->map (Range. start end stride))))
 
+(defn make-named-range
+  ([^String name start end]
+   (-range->map (Range. name start end)))
+  ([^String name start end stride]
+   (-range->map (Range. name start end stride))))

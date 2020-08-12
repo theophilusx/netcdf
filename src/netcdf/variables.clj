@@ -7,7 +7,7 @@
            [ucar.nc2.util EscapeStrings]))
 
 (defn -variable-attributes [^Variable variable]
-  (mapv #'attributes/-attribute->map (.getAttributes variable)))
+  (mapv #'attributes/-attribute->map (.attributes variable)))
 
 (defn -variable-type
   "Return symbol representing the variable type"

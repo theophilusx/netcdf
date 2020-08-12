@@ -1,5 +1,5 @@
 (ns netcdf.file
-  (:import [ucar.nc2 NetcdfFile]
+  (:import [ucar.nc2 NetcdfFile NetcdfFiles]
            [java.io FileNotFoundException IOException])
   (:require [clojure.string :as string]
             [clojure.edn :as edn]))
@@ -14,9 +14,9 @@
   (open \"/path/to/data.nc\")
   (open \"/path/to/data-nc\" :buffer-size 1024000)"
   [location & {:keys [buffer-size] :or {buffer-size 0}}]
-  (let [file (NetcdfFile/canonicalizeUriString location)]
+  (let [file (NetcdfFiles/canonicalizeUriString location)]
     (try
-      (NetcdfFile/open file buffer-size nil)
+      (NetcdfFiles/open file buffer-size nil)
       (catch FileNotFoundException e
         (throw (Exception. (str "File " file " not found"))))
       (catch IOException e
@@ -26,9 +26,9 @@
   "Opens a NetCDF file and read it into memory. `location` is a path to the
   location of the NetCDF 4 file. Returns a `NetcdfFile` object."
   [location]
-  (let [file (NetcdfFile/canonicalizeUriString location)]
+  (let [file (NetcdfFiles/canonicalizeUriString location)]
     (try
-      (NetcdfFile/openInMemory file)
+      (NetcdfFiles/openInMemory file)
       (catch FileNotFoundException e
         (throw (Exception. (str "File " file " not found"))))
       (catch IOException e
@@ -108,15 +108,15 @@
                          (string/trim val)])))
                   data)))
 
-(defn iosp-info
-  "Return details of underlying ISOP information. `nc` is a `NetcdfFile` object
-  returns from a call to `open` or `open-in-memory`. Returned value is a map."
-  [^NetcdfFile nc]
-  {:pre [(= (type nc) NetcdfFile)]}
-  (let [raw (map string/trim (string/split-lines (.getDetailInfo nc)))
-        var-list-map (-mk-iosp-var-map raw)
-        table-map (-parse-iosp-tables raw)]
-    (merge var-list-map table-map)))
+;; (defn iosp-info
+;;   "Return details of underlying ISOP information. `nc` is a `NetcdfFile` object
+;;   returns from a call to `open` or `open-in-memory`. Returned value is a map."
+;;   [^NetcdfFile nc]
+;;   {:pre [(= (type nc) NetcdfFile)]}
+;;   (let [raw (map string/trim (string/split-lines (.getDetailInfo nc)))
+;;         var-list-map (-mk-iosp-var-map raw)
+;;         table-map (-parse-iosp-tables raw)]
+;;     (merge var-list-map table-map)))
 
 (defn file-type-description
   "Return description of file type. `nc` is a `NetcdfFile` object returned from a

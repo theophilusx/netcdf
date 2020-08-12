@@ -2,7 +2,7 @@
   (:require [clojure.test :refer [deftest testing is]]
             [cprop.core :refer [load-config]]
             [netcdf.core :refer [with-netcdf]]
-            [netcdf.keys :as key]
+            [netcdf.keys-test :as key]
             [netcdf.variables :as sut]))
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))

@@ -12,7 +12,7 @@
                  "Root"
                  (.getShortName grp))
    :root? (.isRoot grp)
-   :attributes (attributes/-attributes->vector (.getAttributes grp))
+   :attributes (attributes/-attributes->vector (.attributes grp))
    :dimensions (dimensions/-dimensions->vector (.getDimensions grp))
    :variables (variables/-variables->vector (.getVariables grp))
    :obj grp})

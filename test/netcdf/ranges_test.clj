@@ -1,6 +1,6 @@
 (ns netcdf.ranges-test
   (:require  [netcdf.ranges :as sut]
-             [netcdf.keys :as key]
+             [netcdf.keys-test :as key]
              [clojure.test :refer [deftest testing is]]))
 
 (deftest make-range-test
@@ -31,8 +31,17 @@
       (is (= (:last r) 199))
       (is (= (:length r) 200))
       (is (= (:stride r) 1))))
-  (testing "make-range 4"
-    (let [r (sut/make-range "latData" 0 199 1)]
+  (testing "make-named-range 1"
+    (let [r (sut/make-named-range "latData" 0 199)]
+      (is (map? r))
+      (is (every? key/ranges (keys r)))
+      (is (= (:name r) "latData"))
+      (is (= (:first r) 0))
+      (is (= (:last r) 199))
+      (is (= (:length r) 200))
+      (is (= (:stride r) 1))))
+  (testing "make-named-range 2"
+    (let [r (sut/make-named-range "latData" 0 199 1)]
       (is (map? r))
       (is (every? key/ranges (keys r)))
       (is (= (:name r) "latData"))

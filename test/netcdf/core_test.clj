@@ -14,13 +14,13 @@
 
 (deftest with-netcdf-test
   (testing (str "Testing with file " @test-file)
-    (sut/with-netcdf [fobj @test-file]
-      (is (string? (file-type-description fobj))))))
+    (sut/with-netcdf [nc @test-file]
+      (is (string? (file-type-description nc))))))
 
 (deftest with-memory-netcdf-test
   (testing (str "Testing with file " @test-file)
-    (sut/with-memory-netcdf [f @test-file]
-      (is (string? (file-type-description f))))))
+    (sut/with-memory-netcdf [nc @test-file]
+      (is (string? (file-type-description nc))))))
 
 (deftest core-testing
   (doseq [f test-files]

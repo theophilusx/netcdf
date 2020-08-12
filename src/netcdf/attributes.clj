@@ -1,14 +1,11 @@
 (ns netcdf.attributes
-  (:import [ucar.nc2 NetcdfFile Attribute]
-           ;[ucar.ma2 DataType]
-           ;[ucar.nc2.util EscapeStrings]
-           )
+  (:import [ucar.nc2 NetcdfFile Attribute])
   (:require [clojure.string :as string]))
 
 (defn -attribute-name
   "Return the attribute name"
   [^Attribute attr]
-  (.getName attr))
+  (.getFullName attr))
 
 (defn -attribute-length
   "Return length of the attribute. Value > 1 = array"
@@ -75,5 +72,5 @@
   object returns from call to `open`, `open-file-in-memory`, `with-netcdf` or
   `with-memory-netecdf`."
   [^NetcdfFile nc]
-  (-attributes->vector (.getGlobalAttributes nc)))
+  (-attributes->vector (.attributes (.getRootGroup nc))))
 

@@ -48,11 +48,11 @@
       (is (= (sut/location nc) @test-file))
       (sut/close nc))))
 
-(deftest iosp-info-test
-  (testing (str "isop-info: Testing with file " @test-file)
-    (let [nc (sut/open @test-file)]
-      (is (map? (sut/iosp-info nc)))
-      (sut/close nc))))
+;; (deftest iosp-info-test
+;;   (testing (str "isop-info: Testing with file " @test-file)
+;;     (let [nc (sut/open @test-file)]
+;;       (is (map? (sut/iosp-info nc)))
+;;       (sut/close nc))))
 
 (deftest file-type-description-test
   (testing (str "file-type-description: Testing with file " @test-file)
@@ -76,7 +76,7 @@
     (open-file-in-memory-test)
     (type-id-test)
     (location-test)
-    (iosp-info-test)
+    ;(iosp-info-test)
     (file-type-description-test)
     (file-type-version-test)))
 

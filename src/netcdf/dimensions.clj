@@ -3,28 +3,28 @@
 
 (defn -dimension-name
   "Return dimension name"
-  [dim]
+  [^Dimension dim]
   (.getName dim))
 
 (defn -dimension-length
   "Return length of a dimension"
-  [dim]
+  [^Dimension dim]
   (.getLength dim))
 
 (defn -dimension-unlimited?
   "Return true if dimension is unlimited"
-  [dim]
+  [^Dimension dim]
   (.isUnlimited dim))
 
 (defn -dimension-varies?
   "Returns true if dimension length can be varied"
-  [dim]
+  [^Dimension dim]
   (.isVariableLength dim))
 
 (defn -dimension->map
   "Return the dimension as a map with keys for :name, :length, 
 :unlimited? and :varies?"
-  [dim]
+  [^Dimension dim]
   (when dim
     {:name       (-dimension-name dim)
      :length     (-dimension-length dim)
@@ -46,10 +46,10 @@
 
 (defn dimension
   "Reurn the specified dimension"
-  [nc dimension-name]
+  [^NetcdfFile nc dimension-name]
   (-dimension->map (.findDimension nc dimension-name)))
 
 (defn dimensions
   "Returns vector of maps representing the files dimensions"
-  [nc]
+  [^NetcdfFile nc]
   (-dimensions->vector (.getDimensions nc)))

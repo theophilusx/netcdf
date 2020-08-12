@@ -1,37 +1,38 @@
 (ns netcdf.attributes
   (:import [ucar.nc2 NetcdfFile Attribute]
-           [ucar.ma2 DataType]
-           [ucar.nc2.util EscapeStrings])
+           ;[ucar.ma2 DataType]
+           ;[ucar.nc2.util EscapeStrings]
+           )
   (:require [clojure.string :as string]))
 
 (defn -attribute-name
   "Return the attribute name"
-  [attr]
+  [^Attribute attr]
   (.getName attr))
 
 (defn -attribute-length
   "Return length of the attribute. Value > 1 = array"
-  [attr]
+  [^Attribute attr]
   (.getLength attr))
 
 (defn -attribute-value
   "Return attribute value - string, numeric or array"
-  [attr]
+  [^Attribute attr]
   (let [dt (.getDataType attr)]
     (cond
       (.isString attr)            (.getStringValue attr)
       (and (.isNumeric dt)
            (not (.isArray attr))) (.getNumericValue attr)
-      :default                    (.getValues attr))))
+      :else                    (.getValues attr))))
 
 (defn -attribute-type
   "Return symbol representing the attribute type"
-  [attr]
+  [^Attribute attr]
   (keyword (string/lower-case (.toString (.getDataType attr)))))
 
 (defn -attribute->map
   "Return attribute as a map with keys :name, :type, :length and :value"
-  [attr]
+  [^Attribute attr]
   (when attr
     {:name   (-attribute-name attr)
      :type   (-attribute-type attr)
@@ -59,20 +60,20 @@
   /group/variable@attribute
   /group/variable/structure.member@attribute
   Returns `ucar.mc2.Attribute` if attribute is found, `nil` otherwise."
-  [nc attr-name]
+  [^NetcdfFile nc attr-name]
   (-attribute->map (.findAttribute nc attr-name)))
 
 (defn global-attribute
   "Return a global attribute as a map with keys of `:name`, `:type`, `:length` and
   `:value`. The `nc` argument is a `ucar.nc2.NetcdfFile` object and `attr-name`
   is a case sensitive attribute name."
-  [nc attr-name]
+  [^NetcdfFile nc attr-name]
   (-attribute->map (.findGlobalAttribute nc attr-name)))
 
 (defn global-attributes
   "Return vector of global attributes as maps. `nc` is a `ucar.nc2.NetcdfFile`
   object returns from call to `open`, `open-file-in-memory`, `with-netcdf` or
   `with-memory-netecdf`."
-  [nc]
+  [^NetcdfFile nc]
   (-attributes->vector (.getGlobalAttributes nc)))
 

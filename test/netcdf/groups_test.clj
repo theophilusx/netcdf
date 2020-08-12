@@ -34,9 +34,7 @@
                       (:dimensions g)))
           (is (vector? (:variables g)))
           (is (every? (fn [v]
-                        (= [:description :element-size :name :rank :type
-                            :dimensions :size :shape :ranges :obj :attributes]
-                           (keys v)))
+                        (every? key/variables (keys v)))
                       (:variables g))))))))
 
 (deftest group-testing

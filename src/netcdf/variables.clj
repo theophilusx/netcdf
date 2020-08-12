@@ -6,55 +6,74 @@
   (:import [ucar.nc2 NetcdfFile Group Variable]
            [ucar.nc2.util EscapeStrings]))
 
-(defn -variable-attributes [^Variable variable]
-  (mapv #'attributes/-attribute->map (.attributes variable)))
+(defn -variable-attributes [^Variable v]
+  (mapv #'attributes/-attribute->map (.attributes v)))
 
 (defn -variable-type
   "Return symbol representing the variable type"
-  [^Variable variable]
-  (keyword (string/lower-case (str (.getDataType variable)))))
+  [^Variable v]
+  (keyword (string/lower-case (str (.getDataType v)))))
 
-(defn -variable-description [^Variable variable]
-  (.getDescription variable))
+(defn -variable-description [^Variable v]
+  (.getDescription v))
 
-(defn -variable-dap-name [^Variable variable]
-  (Variable/getDAPName variable))
+(defn -variable-dap-name [^Variable v]
+  (Variable/getDAPName v))
 
-(defn -variable-dimensions [^Variable variable]
-  (mapv #'dimensions/-dimension->map (.getDimensions variable)))
+(defn -variable-dimensions [^Variable v]
+  (mapv #'dimensions/-dimension->map (.getDimensions v)))
 
-(defn -variable-element-size [^Variable variable]
-  (.getElementSize variable))
+(defn -variable-element-size [^Variable v]
+  (.getElementSize v))
 
-(defn -variable-ranges [^Variable variable]
-  (ranges/-ranges->vector (.getRanges variable)))
+(defn -variable-ranges [^Variable v]
+  (ranges/-ranges->vector (.getRanges v)))
 
-(defn -variable-rank [^Variable variable]
-  (.getRank variable))
+(defn -variable-rank [^Variable v]
+  (.getRank v))
 
-(defn -variable-shape [^Variable variable]
-  (vec (seq (.getShape variable))))
+(defn -variable-shape [^Variable v]
+  (vec (seq (.getShape v))))
 
-(defn -variable-size [^Variable variable]
-  (.getSize variable))
+(defn -variable-size [^Variable v]
+  (.getSize v))
 
-(defn -variable->map [^Variable variable]
-  (when variable
-    {:description  (-variable-description variable)
-     :name         (-variable-dap-name variable)
-     :type         (-variable-type variable)
-     :attributes   (-variable-attributes variable)
-     :dimensions   (-variable-dimensions variable)
-     :element-size (-variable-element-size variable)
-     :ranges       (-variable-ranges variable)
-     :rank         (-variable-rank variable)
-     :shape        (-variable-shape variable)
-     :size         (-variable-size variable)
-     :obj          variable}))
+(defn -variable-coordinate? [^Variable v]
+  (.isCoordinateVariable v))
+
+(defn -variable-metadata? [^Variable v]
+  (.isMetadata v))
+
+(defn -variable-scalar? [^Variable v]
+  (.isScalar v))
+
+(defn -variable-unlimited? [^Variable v]
+  (.isUnlimited v))
+
+(defn -variable-variable-length? [^Variable v]
+  (.isVariableLength v))
+
+(defn -variable->map [^Variable v]
+  (when v
+    {:description         (-variable-description v)
+     :name                (-variable-dap-name v)
+     :type                (-variable-type v)
+     :attributes          (-variable-attributes v)
+     :dimensions          (-variable-dimensions v)
+     :element-size        (-variable-element-size v)
+     :ranges              (-variable-ranges v)
+     :rank                (-variable-rank v)
+     :shape               (-variable-shape v)
+     :size                (-variable-size v)
+     :is-coordinate?      (-variable-coordinate? v)
+     :is-metadata?        (-variable-metadata? v)
+     :is-scalar?          (-variable-scalar? v)
+     :is-unlimited?       (-variable-unlimited? v)
+     :is-variable-length? (-variable-variable-length? v)
+     :obj                 v}))
 
 (defn -variables->vector [var-list]
   (mapv #'-variable->map var-list))
-
 
 (defn variable->string
   ([v-map]
@@ -65,23 +84,28 @@
         " " (:type v-map)
         " Size: " (:size v-map)
         " Rank: " (:rank v-map) "\n"
+        " Coordinate?: " (:is-coordinate? v-map)
+        " Metadata?: " (:is-metadata? v-map)
+        " Scalar?: " (:is-scalar? v-map)
+        " Unlimited?: " (:is-unlimited? v-map)
+        " Variable Length?: " (:is-variable-length? v-map) "\n"
         indent "Shape: " (:shape v-map)
         " Element Size: " (:element-size v-map) "\n"
         indent "Ranges:\n"
-        (clojure.string/join "\n"
-                             (map
-                              #(ranges/range->string % (str indent "\t"))
-                              (:ranges v-map))) "\n"
+        (string/join "\n"
+                     (map
+                      #(ranges/range->string % (str indent "\t"))
+                      (:ranges v-map))) "\n"
         indent "Attributes:\n"
-        (clojure.string/join "\n"
-                             (map
-                              #(attributes/attribute->string % (str indent "\t"))
-                              (:attributes v-map))) "\n"
+        (string/join "\n"
+                     (map
+                      #(attributes/attribute->string % (str indent "\t"))
+                      (:attributes v-map))) "\n"
         indent "Dimensions:\n"
-        (clojure.string/join "\n"
-                             (map
-                              #(dimensions/dimension->string % (str indent "\t"))
-                              (:dimensions v-map))))))
+        (string/join "\n"
+                     (map
+                      #(dimensions/dimension->string % (str indent "\t"))
+                      (:dimensions v-map))))))
 
 (defn variable
   "Find a variable by either full name or by supplying group and short name."

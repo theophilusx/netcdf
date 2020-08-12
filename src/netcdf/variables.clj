@@ -86,10 +86,12 @@
 
 (defn variable
   "Find a variable by either full name or by supplying group and short name."
-  ([nc full-name]
-   (-variable->map (.findVariable nc (EscapeStrings/escapeDAPIdentifier full-name))))
-  ([nc group short-name]
-   (-variable->map (.findVariable nc group short-name))))
+  ([nc var-name]
+   (if (clojure.string/starts-with? var-name "/")
+     (-variable->map (.findVariable nc (EscapeStrings/escapeDAPIdentifier var-name)))
+     (variable nc (.getRootGroup nc) var-name)))
+  ([nc group var-name]
+   (-variable->map (.findVariable nc group (EscapeStrings/escapeDAPIdentifier var-name)))))
 
 (defn variables [nc]
   (-variables->vector (.getVariables nc)))

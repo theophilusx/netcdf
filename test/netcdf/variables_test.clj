@@ -1,9 +1,9 @@
 (ns netcdf.variables-test
-  (:require [netcdf.variables :as sut]
-            [clojure.test :refer [deftest testing is]]
-            [netcdf.core :refer [with-netcdf]]
+  (:require [clojure.test :refer [deftest testing is]]
             [cprop.core :refer [load-config]]
-            [netcdf.keys :as key]))
+            [netcdf.core :refer [with-netcdf]]
+            [netcdf.keys :as key]
+            [netcdf.variables :as sut]))
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))
 
@@ -30,44 +30,43 @@
       (let [gv (sut/variables nc)
             v-names (map #(:name %) gv)]
         (doseq [v v-names]
-          (if-let [vm (sut/variable nc (str "/" v))]
+          (let [vm (sut/variable nc v)]
             (do
+              (testing (str "variable " v " is not nil")
+                (is (not (nil? v))))
               (testing (str "variable " v " has correct keys")
-              (is (every? key/variables (keys vm))))
-            (testing (str "variable " v " description is a string or nil")
-              (is (or (nil? (:description vm))
-                      (string? (:description vm)))))
-            (testing (str "variable " v " element-size >= 1")
-              (is (>= (:element-size vm) 1)))
-            (testing (str "variable " v " name matches")
-              (is (= (:name vm) v)))
-            (testing (str "variable " v " rank is an integer")
-              (is (integer? (:rank vm))))
-            (testing (str "variable " v " has valid type")
-              (is (contains? key/variable-types (:type vm))))
-            (testing (str "variable " v " dimensions is a vector of 1 or more")
-              (is (vector? (:dimensions vm)))
-              (is (>= (count (:dimensions vm)) 0))
-              (is (every? (fn [d]
-                            (every? key/dimensions (keys d)))
-                          (:dimensions vm))))
-            (testing (str "variable " v " has a positive size")
-              (is (> (:size vm) 0)))
-            (testing (str "variable " v " shape is a vector")
-              (is (vector? (:shape vm))))
-            (testing (str "variable " v " has valid ranges")
-              (is (vector? (:ranges vm)))
-              (is (every? (fn [r]
-                            (every? key/ranges (keys r)))
-                          (:ranges vm))))
-            (testing (str "variable " v " has valid attributes")
-              (is (vector? (:attributes vm)))
-              (is (every? (fn [a]
-                            (every? key/attributes (keys a)))
-                          (:attributes vm)))))
-            (do
-              (println (str "Error: Failed to retrieve variable " v))
-              (println (str "Source: " @test-file)))))))))
+                (is (every? key/variables (keys vm))))
+              (testing (str "variable " v " description is a string or nil")
+                (is (or (nil? (:description vm))
+                        (string? (:description vm)))))
+              (testing (str "variable " v " element-size >= 1")
+                (is (>= (:element-size vm) 1)))
+              (testing (str "variable " v " name matches")
+                (is (= (:name vm) v)))
+              (testing (str "variable " v " rank is an integer")
+                (is (integer? (:rank vm))))
+              (testing (str "variable " v " has valid type")
+                (is (contains? key/variable-types (:type vm))))
+              (testing (str "variable " v " dimensions is a vector of 1 or more")
+                (is (vector? (:dimensions vm)))
+                (is (>= (count (:dimensions vm)) 0))
+                (is (every? (fn [d]
+                              (every? key/dimensions (keys d)))
+                            (:dimensions vm))))
+              (testing (str "variable " v " has a positive size")
+                (is (> (:size vm) 0)))
+              (testing (str "variable " v " shape is a vector")
+                (is (vector? (:shape vm))))
+              (testing (str "variable " v " has valid ranges")
+                (is (vector? (:ranges vm)))
+                (is (every? (fn [r]
+                              (every? key/ranges (keys r)))
+                            (:ranges vm))))
+              (testing (str "variable " v " has valid attributes")
+                (is (vector? (:attributes vm)))
+                (is (every? (fn [a]
+                              (every? key/attributes (keys a)))
+                            (:attributes vm)))))))))))
 
 (deftest variable-testing
   (doseq [f test-files]

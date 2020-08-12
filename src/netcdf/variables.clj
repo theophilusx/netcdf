@@ -3,43 +3,42 @@
             [netcdf.dimensions :as dimensions]
             [netcdf.ranges :as ranges]
             [clojure.string :as string])
-  (:import [ucar.nc2 NetcdfFile Variable]
-           [ucar.ma2 DataType]
+  (:import [ucar.nc2 NetcdfFile Group Variable]
            [ucar.nc2.util EscapeStrings]))
 
-(defn -variable-attributes [variable]
+(defn -variable-attributes [^Variable variable]
   (mapv #'attributes/-attribute->map (.getAttributes variable)))
 
 (defn -variable-type
   "Return symbol representing the variable type"
-  [variable]
+  [^Variable variable]
   (keyword (string/lower-case (str (.getDataType variable)))))
 
-(defn -variable-description [variable]
+(defn -variable-description [^Variable variable]
   (.getDescription variable))
 
-(defn -variable-dap-name [variable]
+(defn -variable-dap-name [^Variable variable]
   (Variable/getDAPName variable))
 
-(defn -variable-dimensions [variable]
+(defn -variable-dimensions [^Variable variable]
   (mapv #'dimensions/-dimension->map (.getDimensions variable)))
 
-(defn -variable-element-size [variable]
+(defn -variable-element-size [^Variable variable]
   (.getElementSize variable))
 
-(defn -variable-ranges [variable]
+(defn -variable-ranges [^Variable variable]
   (ranges/-ranges->vector (.getRanges variable)))
 
-(defn -variable-rank [variable]
+(defn -variable-rank [^Variable variable]
   (.getRank variable))
 
-(defn -variable-shape [variable]
+(defn -variable-shape [^Variable variable]
   (vec (seq (.getShape variable))))
 
-(defn -variable-size [variable]
+(defn -variable-size [^Variable variable]
   (.getSize variable))
 
-(defn -variable->map [variable]
+(defn -variable->map [^Variable variable]
   (when variable
     {:description  (-variable-description variable)
      :name         (-variable-dap-name variable)
@@ -86,12 +85,12 @@
 
 (defn variable
   "Find a variable by either full name or by supplying group and short name."
-  ([nc var-name]
+  ([^NetcdfFile nc var-name]
    (if (clojure.string/starts-with? var-name "/")
      (-variable->map (.findVariable nc (EscapeStrings/escapeDAPIdentifier var-name)))
      (variable nc (.getRootGroup nc) var-name)))
-  ([nc group var-name]
+  ([^NetcdfFile nc ^Group group var-name]
    (-variable->map (.findVariable nc group (EscapeStrings/escapeDAPIdentifier var-name)))))
 
-(defn variables [nc]
+(defn variables [^NetcdfFile nc]
   (-variables->vector (.getVariables nc)))

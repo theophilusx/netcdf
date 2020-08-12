@@ -1,12 +1,13 @@
 (ns netcdf.groups
   (:require [netcdf.attributes :as attributes]
             [netcdf.dimensions :as dimensions]
-            [netcdf.variables :as variables])
+            [netcdf.variables :as variables]
+            [clojure.string :as string])
   (:import [ucar.nc2 NetcdfFile Group]))
 
 (defn -mk-group-map
   "Returns internal representation of NetCDF group as a map"
-  [grp]
+  [^Group grp]
   {:short-name (if (.isRoot grp)
                  "Root"
                  (.getShortName grp))
@@ -22,7 +23,7 @@
   = vector of group attributes, `dimensions` = dimensions of variables in the group
   `variables` = vector of variables in the group and `obj` = the low level NetCDF 
    group object." 
-  [grp]
+  [^Group grp]
   (let [base (-mk-group-map grp)
         children (.getGroups grp)]
     (if (empty? children)
@@ -39,23 +40,23 @@
    (str indent "Name: " (:name grp-map)
         " Root?: " (:root? grp-map) "\n"
         indent "Attributes:\n"
-        (clojure.string/join "\n"
+        (string/join "\n"
                              (map
                               #(attributes/attribute->string % (str indent "\t"))
                               (:attributes grp-map))) "\n"
         indent "Dimensions:\n"
-        (clojure.string/join "\n"
+        (string/join "\n"
                              (map
                               #(dimensions/dimension->string % (str indent "\t"))
                               (:dimensions grp-map))) "\n"
         indent "Variables:\n"
-        (clojure.string/join "\n"
+        (string/join "\n"
                              (map
                               #(variables/variable->string % (str indent "\t"))
                               (:variables grp-map))) "\n"
         (if (:children grp-map)
           (str indent "Children:\n"
-               (clojure.string/join "\n"
+               (string/join "\n"
                                     (map
                                      #(group->string % (str indent "\t"))
                                      (:children grp-map))))
@@ -66,10 +67,10 @@
   `:attributes`, `:dimensions`, `:variables`, `:obj` and `:children`. The 
   `nc` argument is a netcdf file object returned from a call to `open` or 
   `open-in-memory`. "  
-  [nc]
+  [^NetcdfFile nc]
   (-group->map (.getRootGroup nc)))
 
 (defn group
   "return a group given the full group name."
-  [nc group-name]
+  [^NetcdfFile nc group-name]
   (-group->map (.findGroup nc group-name)))

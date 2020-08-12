@@ -1,4 +1,4 @@
-(ns netcdf.file
+(ns theophilusx.netcdf.file
   (:import [ucar.nc2 NetcdfFile NetcdfFiles]
            [java.io FileNotFoundException IOException])
   (:require [clojure.string :as string]

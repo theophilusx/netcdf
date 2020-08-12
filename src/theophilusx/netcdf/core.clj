@@ -1,5 +1,5 @@
-(ns netcdf.core
-  (:require [netcdf.file :as f]))
+(ns theophilusx.netcdf.core
+  (:require [theophilusx.netcdf.file :as f]))
 
 (defmacro with-netcdf
   "A macro for opening and processing a NetCDF file, performing some operations,

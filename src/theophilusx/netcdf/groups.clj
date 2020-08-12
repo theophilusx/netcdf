@@ -1,7 +1,7 @@
-(ns netcdf.groups
-  (:require [netcdf.attributes :as attributes]
-            [netcdf.dimensions :as dimensions]
-            [netcdf.variables :as variables]
+(ns theophilusx.netcdf.groups
+  (:require [theophilusx.netcdf.attributes :as attributes]
+            [theophilusx.netcdf.dimensions :as dimensions]
+            [theophilusx.netcdf.variables :as variables]
             [clojure.string :as string])
   (:import [ucar.nc2 NetcdfFile Group]))
 

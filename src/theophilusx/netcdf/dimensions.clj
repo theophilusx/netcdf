@@ -1,4 +1,4 @@
-(ns netcdf.dimensions
+(ns theophilusx.netcdf.dimensions
   (:import [ucar.nc2 NetcdfFile Dimension]))
 
 (defn -dimension-name

@@ -1,4 +1,4 @@
-(ns netcdf.keys-test)
+(ns theophilusx.netcdf.keys-test)
 
 (def variables #{:description :element-size :name :rank :type
                  :dimensions :size :shape :ranges :obj :attributes

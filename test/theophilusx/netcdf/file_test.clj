@@ -1,7 +1,7 @@
-(ns netcdf.file-test
+(ns theophilusx.netcdf.file-test
   (:import [ucar.nc2 NetcdfFile])
   (:require [clojure.test :refer [deftest testing is]]
-            [netcdf.file :as sut]
+            [theophilusx.netcdf.file :as sut]
             [cprop.core :refer [load-config]]))
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))

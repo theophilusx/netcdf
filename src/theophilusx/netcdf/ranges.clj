@@ -1,4 +1,4 @@
-(ns netcdf.ranges
+(ns theophilusx.netcdf.ranges
   (:import [ucar.ma2 Range]))
 
 (defn -range-name [^Range range]

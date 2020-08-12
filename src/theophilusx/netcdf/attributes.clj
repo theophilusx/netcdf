@@ -1,4 +1,4 @@
-(ns netcdf.attributes
+(ns theophilusx.netcdf.attributes
   (:import [ucar.nc2 NetcdfFile Attribute])
   (:require [clojure.string :as string]))
 

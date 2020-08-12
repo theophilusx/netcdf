@@ -1,9 +1,9 @@
-(ns netcdf.attributes-test
-  (:require [netcdf.attributes :as sut]
+(ns theophilusx.netcdf.attributes-test
+  (:require [theophilusx.netcdf.attributes :as sut]
             [clojure.test :refer [deftest testing is]]
-            [netcdf.core :refer [with-netcdf]]
+            [theophilusx.netcdf.core :refer [with-netcdf]]
             [cprop.core :refer [load-config]]
-            [netcdf.keys-test :as key]))
+            [theophilusx.netcdf.keys-test :as key]))
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))
 

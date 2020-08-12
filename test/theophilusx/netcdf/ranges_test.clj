@@ -1,6 +1,6 @@
-(ns netcdf.ranges-test
-  (:require  [netcdf.ranges :as sut]
-             [netcdf.keys-test :as key]
+(ns theophilusx.netcdf.ranges-test
+  (:require  [theophilusx.netcdf.ranges :as sut]
+             [theophilusx.netcdf.keys-test :as key]
              [clojure.test :refer [deftest testing is]]))
 
 (deftest make-range-test

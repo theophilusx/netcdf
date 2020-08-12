@@ -1,8 +1,8 @@
-(ns netcdf.core-test
-  (:require [netcdf.core :as sut]
+(ns theophilusx.netcdf.core-test
+  (:require [theophilusx.netcdf.core :as sut]
             [clojure.test :refer [deftest testing is]]
             [cprop.core :refer [load-config]]
-            [netcdf.file :refer [file-type-description]]))
+            [theophilusx.netcdf.file :refer [file-type-description]]))
 
 (def conf (load-config :file "/home/tim/Projects/clojure/netcdf/config.edn"))
 

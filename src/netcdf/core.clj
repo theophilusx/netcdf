@@ -2,9 +2,8 @@
   (:require [netcdf.file :as f]))
 
 (defmacro with-netcdf
-  "A macro for opening and processing a NetCDF file, performing some operations, 
-  and then closing the file. Arguments are a `name` to refer to the opened NetCDF
-  object, a `file` to open and a `body` of expressions to execute."
+  "A macro for opening and processing a NetCDF file, performing some operations,
+  NetCDF object, a `file` to open and a `body` of expressions to execute."
   [[name file] & body]
   `(let [~name (f/open ~file)]
      ~@body
@@ -16,7 +15,7 @@
   on and a `body` of expressions to execute."
   [[name file] & body]
   `(let [~name (f/open-in-memory ~file)]
-    ~@body
-    (f/close ~name)))
+     ~@body
+     (f/close ~name)))
 
 

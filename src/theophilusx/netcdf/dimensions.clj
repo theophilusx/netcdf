@@ -22,8 +22,14 @@
   (.isVariableLength dim))
 
 (defn -dimension->map
-  "Return the dimension as a map with keys for :name, :length, 
-:unlimited? and :varies?"
+  "Return the dimension as a map with the following keys
+
+  | Key           | Description                          |
+  |---------------|--------------------------------------|
+  | `:name`       | Dimension name                       |
+  | `:length`     | Dimension length                     |
+  | `:unlimited?` | True if dimension is unlimited       |
+  | `:varies?`    | True is dimension is variable length |"
   [^Dimension dim]
   (when dim
     {:name       (-dimension-name dim)
@@ -32,11 +38,15 @@
      :varying?   (-dimension-varies? dim)
      :obj        dim}))
 
-(defn -dimensions->vector [dim-list]
+(defn -dimensions->vector
+  "Return a vector of dimension maps. The `dim-list` argument is a collection
+  of Java `Dimension` objects."
+  [dim-list]
   (mapv #'-dimension->map dim-list))
 
 
 (defn dimension->string
+  "Return a dimension map as a string."
   ([d-map]
    (dimension->string d-map ""))
   ([d-map indent]
@@ -45,11 +55,13 @@
         " Varying? " (:varying? d-map))))
 
 (defn dimension
-  "Reurn the specified dimension"
+  "Reurn the specified dimension. The `nc` argument is a `NetcdfFile` object
+  and dimension-name is the `string` name of a dimension."
   [^NetcdfFile nc dimension-name]
   (-dimension->map (.findDimension nc dimension-name)))
 
 (defn dimensions
-  "Returns vector of maps representing the files dimensions"
+  "Returns a vector of dimension maps representing the dimensions in the
+  `NetcdfFile` object."
   [^NetcdfFile nc]
   (-dimensions->vector (.getDimensions nc)))

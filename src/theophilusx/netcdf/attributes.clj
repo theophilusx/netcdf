@@ -28,7 +28,14 @@
   (keyword (string/lower-case (.toString (.getDataType attr)))))
 
 (defn -attribute->map
-  "Return attribute as a map with keys :name, :type, :length and :value"
+  "Return an attribute as a map with the following keys
+
+  | Key       | Description                          |
+  |-----------|--------------------------------------|
+  | `:name`   | The attribute name                   |
+  | `:type`   | The attribute data type as a keyword |
+  | `:length` | The attribute length                 |
+  | `:value`  | The attribute value                  |"
   [^Attribute attr]
   (when attr
     {:name   (-attribute-name attr)
@@ -37,11 +44,15 @@
      :value  (-attribute-value attr)
      :obj attr}))
 
-(defn -attributes->vector [attr-list]
+(defn -attributes->vector
+  "Returns a `vector` of attribute maps. The `attr-list` argument is a
+  collection of Java `Attribute` objects."
+  [attr-list]
   (mapv #'-attribute->map attr-list))
 
 
 (defn attribute->string
+  "Return a `string` representation of an attribute."
   ([a-map]
    (attribute->string a-map ""))
   ([a-map indent]
@@ -61,16 +72,16 @@
   (-attribute->map (.findAttribute nc attr-name)))
 
 (defn global-attribute
-  "Return a global attribute as a map with keys of `:name`, `:type`, `:length` and
-  `:value`. The `nc` argument is a `ucar.nc2.NetcdfFile` object and `attr-name`
-  is a case sensitive attribute name."
+  "Return a global attribute as an attribute map. The `nc` argument is a
+  `ucar.nc2.NetcdfFile` object and `attr-name` is a case sensitive attribute
+  name."
   [^NetcdfFile nc attr-name]
   (-attribute->map (.findGlobalAttribute nc attr-name)))
 
 (defn global-attributes
-  "Return vector of global attributes as maps. `nc` is a `ucar.nc2.NetcdfFile`
-  object returns from call to `open`, `open-file-in-memory`, `with-netcdf` or
-  `with-memory-netecdf`."
+  "Return a `vector` of global attributes as attribute maps. `nc` is a
+  `ucar.nc2.NetcdfFile` object returns from call to `open`,
+  `open-file-in-memory`, `with-netcdf` or `with-memory-netecdf`."
   [^NetcdfFile nc]
   (-attributes->vector (.attributes (.getRootGroup nc))))
 

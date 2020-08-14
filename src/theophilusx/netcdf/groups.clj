@@ -1,4 +1,5 @@
 (ns theophilusx.netcdf.groups
+  "Functions for manipulating `Group` objects."
   (:require [theophilusx.netcdf.attributes :as attributes]
             [theophilusx.netcdf.dimensions :as dimensions]
             [theophilusx.netcdf.variables :as variables]

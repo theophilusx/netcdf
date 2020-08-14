@@ -1,4 +1,5 @@
 (ns theophilusx.netcdf.variables
+  "Functions for manipulating `Variable` objects."
   (:require [theophilusx.netcdf.attributes :as attributes]
             [theophilusx.netcdf.dimensions :as dimensions]
             [theophilusx.netcdf.ranges :as ranges]

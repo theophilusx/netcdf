@@ -1,4 +1,5 @@
 (ns theophilusx.netcdf.attributes
+  "Functions to manipulate `Attribute` objects."
   (:import [ucar.nc2 NetcdfFile Attribute])
   (:require [clojure.string :as string]))
 

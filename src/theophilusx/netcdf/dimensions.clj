@@ -1,4 +1,5 @@
 (ns theophilusx.netcdf.dimensions
+  "Functions to manipulate `Dimension` objects."
   (:import [ucar.nc2 NetcdfFile Dimension]))
 
 (defn -dimension-name

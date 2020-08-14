@@ -1,8 +1,8 @@
 (ns theophilusx.netcdf.file
+  "functions to manipulate `NetcdfFile` objects."
   (:import [ucar.nc2 NetcdfFile NetcdfFiles]
            [java.io FileNotFoundException IOException])
-  (:require [clojure.string :as string]
-            [clojure.edn :as edn]))
+  (:require [clojure.string :as string]))
 
 (defn ^NetcdfFile open
   "Open a NetCDF file. Return a `NetcdfFile` object. `location` is a path
@@ -64,49 +64,49 @@
                                       true
                                       false)}}))
 
-(defn -mk-cache-info-map [line]
-  (let [[var-name cached size c-size] (string/split line #" +")]
-    {(keyword var-name) {:cached? (if (= cached "true")
-                                    true
-                                    false)
-                         :size (or (edn/read-string size)
-                                   0)
-                         :cached-size (or (clojure.edn/read-string c-size)
-                                          0)}}))
+;; (defn -mk-cache-info-map [line]
+;;   (let [[var-name cached size c-size] (string/split line #" +")]
+;;     {(keyword var-name) {:cached? (if (= cached "true")
+;;                                     true
+;;                                     false)
+;;                          :size (or (edn/read-string size)
+;;                                    0)
+;;                          :cached-size (or (clojure.edn/read-string c-size)
+;;                                          0)}}))
 
-(defn -parse-iosp-tables [data]
-  (let [state (reduce (fn [acc line]
-               (cond
-                 (or (string/index-of line "=")
-                     (empty? line)) acc
-                 (string/starts-with? line "name____start")
-                 (assoc acc :state :var-info)
-                 (string/starts-with? line "Variable  isCaching")
-                 (assoc acc :state :cache-info)
-                 :else
-                 (if (= (:state acc) :var-info)
-                   (let [var-data (-mk-var-info-map line)]
-                     (assoc acc :var-info (merge (:var-info acc) var-data)))
-                   (when (= (:state acc) :cache-info)
-                     (let [cache-data (-mk-cache-info-map line)]
-                       (assoc acc :cache-info
-                              (merge (:cache-info acc) cache-data)))))))
-                      {:state :unknown :var-info {} :cache-info {}} data)]
-    {:var-info (:var-info state)
-     :cache-info (:cache-info state)}) )
+;; (defn -parse-iosp-tables [data]
+;;   (let [state (reduce (fn [acc line]
+;;                (cond
+;;                  (or (string/index-of line "=")
+;;                      (empty? line)) acc
+;;                  (string/starts-with? line "name____start")
+;;                  (assoc acc :state :var-info)
+;;                  (string/starts-with? line "Variable  isCaching")
+;;                  (assoc acc :state :cache-info)
+;;                  :else
+;;                  (if (= (:state acc) :var-info)
+;;                    (let [var-data (-mk-var-info-map line)]
+;;                      (assoc acc :var-info (merge (:var-info acc) var-data)))
+;;                    (when (= (:state acc) :cache-info)
+;;                      (let [cache-data (-mk-cache-info-map line)]
+;;                        (assoc acc :cache-info
+;;                               (merge (:cache-info acc) cache-data)))))))
+;;                       {:state :unknown :var-info {} :cache-info {}} data)]
+;;     {:var-info (:var-info state)
+;;      :cache-info (:cache-info state)}) )
 
-(defn -mk-iosp-var-map [data]
-  (reduce (fn [acc v]
-            (if (= (count v) 2)
-              (assoc acc (first v) (second v))
-              acc))
-          {} (map (fn [line]
-                    (when (and (string/index-of line "=")
-                             (not (string/starts-with? line "total")))
-                      (let [[name val] (string/split line #"=")]
-                        [(keyword (string/replace (string/trim name) " " "-"))
-                         (string/trim val)])))
-                  data)))
+;; (defn -mk-iosp-var-map [data]
+;;   (reduce (fn [acc v]
+;;             (if (= (count v) 2)
+;;               (assoc acc (first v) (second v))
+;;               acc))
+;;           {} (map (fn [line]
+;;                     (when (and (string/index-of line "=")
+;;                              (not (string/starts-with? line "total")))
+;;                       (let [[name val] (string/split line #"=")]
+;;                         [(keyword (string/replace (string/trim name) " " "-"))
+;;                          (string/trim val)])))
+;;                   data)))
 
 ;; (defn iosp-info
 ;;   "Return details of underlying ISOP information. `nc` is a `NetcdfFile` object

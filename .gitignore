@@ -13,3 +13,7 @@ pom.xml.asc
 .nrepl-port
 .cpcache/
 .cache
+.eastwood
+.lein-env
+.rebel_readline_history
+config.edn

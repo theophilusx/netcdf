@@ -1,57 +1,39 @@
+- [netcdf](#sec-1)
+  - [Usage](#sec-1-1)
+  - [Name Spaces](#sec-1-2)
+  - [License](#sec-1-3)
 
-# Table of Contents
-
-1.  [netcdf](#org9dbef9b)
-    1.  [Why](#org529c207)
-    2.  [Usage](#org6b0035d)
-    3.  [License](#org322ba23)
-
-
-<a id="org9dbef9b"></a>
-
-# netcdf
+# netcdf<a id="sec-1"></a>
 
 A Clojure library which wraps the Java netcdf4 library from Unidata
 
-At this stage, the focus of this library is for reading netcdf4 data
-files. There is no support for writing netcdf files at this time. As my use case
-is focused on processing large netcdf data files (i.e. reading), it is unlikely
-I will add support for writing/creating netcdf files. 
+At this stage, the focus of this library is for reading netcdf4 data files. There is no support for writing netcdf files at this time. As my use case is focused on processing large netcdf data files (i.e. reading), it is unlikely I will add support for writing/creating netcdf files.
 
-If you are searching for a Clojure library which is considerably more mature and
-does support writing netcdf files, check out [netcdf-clj](https://github.com/r0man/netcdf-clj)
+If you are searching for a Clojure library which is considerably more mature and does support writing netcdf files, check out [netcdf-clj](https://github.com/r0man/netcdf-clj)
 
+## Usage<a id="sec-1-1"></a>
 
-<a id="org529c207"></a>
+The library provides a Clojure interface to the Unidata NetCDF4 Java library. This is a very large library and no attempt has been made to implement all of the functinality provided by the Java library. The focus here is on reading NetCDF files and extracting data for further processing.
 
-## Why
+Most of the interface is based on Clojure maps. Each key NetCDF data structure is represented as a Clojure map (variables, dimensions, attributes, etc). Each map has keys representing key information about the underlying object e.g. `:name`, `:type`, `:size` etc. In addition, each map also contains an `:obj` key which contains the raw underlying Java object. This allows easy access to additional Java library operations based on Clojure's Java interop facilities.
 
-Why write another Clojure wrapper for the netcdf4 Java library?
+## Name Spaces<a id="sec-1-2"></a>
 
-Well, main reason is that I found netcdf-clj to be too slow for my
-requirements. However, as I'm inexperienced with netcdf and the Java library, I
-wasn't sure why it was so slow. Experiments using other libraries (such as
-Javascript) and tests using the native Java library show that processing netcdf
-files can be very fast. Therefore, either the netcdf-clj library is slow or how
-I was using it was slow or inefficient. My suspicion is it is the latter. 
+The following name spaces are implemented by the library.
 
-To learn more about the Java library and Clojure interop, the solution is to try
-implementing my own wrapper library. 
+| Name Space                    | Description                                   |
+|----------------------------- |--------------------------------------------- |
+| theophilusx.netcdf.attributes | Access NetCDF attribute data                  |
+| theophilusx.netcdf.core       | Convenience name space which contains aliases |
+|                               | to public functions in other name spaces      |
+| theophilusx.netcdf.dimensions | Access to variable dimension information      |
+| theophilusx.netcdf.file       | Functions to open/read NetCDF files           |
+| theophilusx.netcdf.groups     | Access data on NetCDF groups                  |
+| theophilusx.netcdf.ranges     | Generate and manipulate Range objects         |
+| theophilusx.netcdf.variables  | Access and process NetCDF variables           |
 
-
-<a id="org6b0035d"></a>
-
-## Usage
-
-FIXME
-
-
-<a id="org322ba23"></a>
-
-## License
+## License<a id="sec-1-3"></a>
 
 Copyright © 2019 Tim Cross
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
-
+Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.

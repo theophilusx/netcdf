@@ -10,23 +10,34 @@ I will add support for writing/creating netcdf files.
 If you are searching for a Clojure library which is considerably more mature and
 does support writing netcdf files, check out [[https://github.com/r0man/netcdf-clj][netcdf-clj]]
 
-** Why
-
-Why write another Clojure wrapper for the netcdf4 Java library?
-
-Well, main reason is that I found netcdf-clj to be too slow for my
-requirements. However, as I'm inexperienced with netcdf and the Java library, I
-wasn't sure why it was so slow. Experiments using other libraries (such as
-Javascript) and tests using the native Java library show that processing netcdf
-files can be very fast. Therefore, either the netcdf-clj library is slow or how
-I was using it was slow or inefficient. My suspicion is it is the latter. 
-
-To learn more about the Java library and Clojure interop, the solution is to try
-implementing my own wrapper library. 
-
 ** Usage
 
-FIXME
+The library provides a Clojure interface to the Unidata NetCDF4 Java library.
+This is a very large library and no attempt has been made to implement all of
+the functinality provided by the Java library. The focus here is on reading
+NetCDF files and extracting data for further processing.
+
+Most of the interface is based on Clojure maps. Each key NetCDF data structure
+is represented as a Clojure map (variables, dimensions, attributes, etc). Each
+map has keys representing key information about the underlying object e.g.
+~:name~, ~:type~, ~:size~ etc. In addition, each map also contains an ~:obj~ key
+which contains the raw underlying Java object. This allows easy access to
+additional Java library operations based on Clojure's Java interop facilities.
+
+** Name Spaces 
+
+The following name spaces are implemented by the library. 
+
+| Name Space                    | Description                                   |
+|-------------------------------+-----------------------------------------------|
+| theophilusx.netcdf.attributes | Access NetCDF attribute data                  |
+| theophilusx.netcdf.core       | Convenience name space which contains aliases |
+|                               | to public functions in other name spaces      |
+| theophilusx.netcdf.dimensions | Access to variable dimension information      |
+| theophilusx.netcdf.file       | Functions to open/read NetCDF files           |
+| theophilusx.netcdf.groups     | Access data on NetCDF groups                  |
+| theophilusx.netcdf.ranges     | Generate and manipulate Range objects         |
+| theophilusx.netcdf.variables  | Access and process NetCDF variables           |
 
 ** License
 

@@ -29,7 +29,7 @@
 
 (def variable vars/variable)
 (def variables vars/variables)
-(def readScalar vars/readScalar)
+(def read-scalar vars/read-scalar)
 
 (def attribute attrs/attribute)
 (def global-attribute attrs/global-attribute)

@@ -188,3 +188,16 @@
   in a NetCEF file."
   [^NetcdfFile nc]
   (-variables->vector (.getVariables nc)))
+
+(defn readScalar [v]
+  (when (not (:is-scalar? v))
+    (throw (Exception. (str (:name v) " not a scalar variable"))))
+  (condp = (:type v)
+    :byte (.readScalarByte (:obj v))
+    :double (.readScalarDouble (:obj v))
+    :float (.readScalarFloat (:obj v))
+    :int (.readScalarInt (:obj v))
+    :long (.readScalarLong (:obj v))
+    :short (.readScalarShort (:obj v))
+    :string (.readScalarString (:obj v))
+    (str "Unknown data type of " (:type v)))) 

@@ -5,7 +5,8 @@
             [theophilusx.netcdf.ranges :as ranges]
             [clojure.string :as string])
   (:import [ucar.nc2 NetcdfFile Group Variable]
-           [ucar.nc2.util EscapeStrings]))
+           [ucar.nc2.util EscapeStrings]
+           [ucar.ma2 Array Index]))
 
 (defn -variable-attributes
   "Extract a vector of attribute map data from a variable. See
@@ -189,7 +190,7 @@
   [^NetcdfFile nc]
   (-variables->vector (.getVariables nc)))
 
-(defn readScalar
+(defn read-scalar
   "Reads a scalar variable. The `v` argument is a variable map returned from a
   call to `theophilusx.netcdf.variables/variables` or
   `theophilusx.netcdf.variables/variable'. Will throw an exception if the
@@ -207,3 +208,20 @@
     :short (.readScalarShort (:obj v))
     :string (.readScalarString (:obj v))
     (throw (Exception. "Unknown data type of " (:type v))))) 
+
+(defn read-slice [v origin size]
+  (.read (:obj v) (int-array origin) (int-array size)))
+
+(defn read-value [v origin]
+  (let [size (take (count origin) (range 1 2 0))
+        values (read-slice v origin size)]
+    (condp = (:type v)
+      :boolean (.getBoolean values 0)
+      :byte (.getByte values 0)
+      :char (.getChar values 0)
+      :double (.getDouble values 0)
+      :float (.getFloat values 0)
+      :int (.getInt values 0)
+      :long (.getLong values 0)
+      :object (.getObject values 0)
+      (throw (Exception. (str "Unknown type " (:type v) " for variable " (:name v))))))) 

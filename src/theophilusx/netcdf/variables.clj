@@ -3,10 +3,10 @@
   (:require [theophilusx.netcdf.attributes :as attributes]
             [theophilusx.netcdf.dimensions :as dimensions]
             [theophilusx.netcdf.ranges :as ranges]
+            [theophilusx.netcdf.utils :as utils]
             [clojure.string :as string])
   (:import [ucar.nc2 NetcdfFile Group Variable]
-           [ucar.nc2.util EscapeStrings]
-           [ucar.ma2 Array Index]))
+           [ucar.nc2.util EscapeStrings]))
 
 (defn -variable-attributes
   "Extract a vector of attribute map data from a variable. See
@@ -17,7 +17,7 @@
 (defn -variable-type
   "Return symbol representing the variable data type"
   [^Variable v]
-  (keyword (string/lower-case (str (.getDataType v)))))
+  (utils/type->keyword (.getDataType v)))
 
 (defn -variable-description
   "Return a string describing the variable."

@@ -1,7 +1,7 @@
 (ns theophilusx.netcdf.attributes
   "Functions to manipulate `Attribute` objects."
   (:import [ucar.nc2 NetcdfFile Attribute])
-  (:require [clojure.string :as string]))
+  (:require [theophilusx.netcdf.utils :as utils]))
 
 (defn -attribute-name
   "Return the attribute name"
@@ -26,7 +26,7 @@
 (defn -attribute-type
   "Return symbol representing the attribute type"
   [^Attribute attr]
-  (keyword (string/lower-case (.toString (.getDataType attr)))))
+  (utils/type->keyword (.getDataType attr)))
 
 (defn -attribute->map
   "Return an attribute as a map with the following keys

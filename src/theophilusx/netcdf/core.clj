@@ -19,8 +19,8 @@
      (files/close ~name)))
 
 (defmacro with-memory-netcdf
-  "Same as `with-netcdf`, but loads the file into memory. Arguments are a 
-  `name` to refer tot he NetCDF object, a `file` specifying the file to operate 
+  "Same as `with-netcdf`, but loads the file into memory. Arguments are a
+  `name` to refer tot he NetCDF object, a `file` specifying the file to operate
   on and a `body` of expressions to execute."
   [[name file] & body]
   `(let [~name (files/open-in-memory ~file)]
@@ -29,6 +29,7 @@
 
 (def variable vars/variable)
 (def variables vars/variables)
+(def readScalar vars/readScalar)
 
 (def attribute attrs/attribute)
 (def global-attribute attrs/global-attribute)

@@ -21,7 +21,7 @@
       (.isString attr)            (.getStringValue attr)
       (and (.isNumeric dt)
            (not (.isArray attr))) (.getNumericValue attr)
-      :else                    (.getValues attr))))
+      :else                       (.getValues attr))))
 
 (defn -attribute-type
   "Return symbol representing the attribute type"
@@ -43,7 +43,7 @@
      :type   (-attribute-type attr)
      :length (-attribute-length attr)
      :value  (-attribute-value attr)
-     :obj attr}))
+     :obj    attr}))
 
 (defn -attributes->vector
   "Returns a `vector` of attribute maps. The `attr-list` argument is a

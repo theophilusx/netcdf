@@ -4,7 +4,8 @@
             [theophilusx.netcdf.attributes :as attrs]
             [theophilusx.netcdf.dimensions :as dims]
             [theophilusx.netcdf.groups :as grps]
-            [theophilusx.netcdf.ranges :as rngs]))
+            [theophilusx.netcdf.ranges :as rngs]
+            [theophilusx.netcdf.data :as data]))
 
 (def open files/open)
 (def open-in-memory files/open-in-memory)
@@ -29,7 +30,6 @@
 
 (def variable vars/variable)
 (def variables vars/variables)
-(def read-scalar vars/read-scalar)
 
 (def attribute attrs/attribute)
 (def global-attribute attrs/global-attribute)
@@ -44,4 +44,6 @@
 (def make-range rngs/make-range)
 (def make-named-range rngs/make-named-range)
 
-
+(def read-value data/read-value)
+(def read-slice data/read-slice)
+(def read-scalar data/read-scalar)

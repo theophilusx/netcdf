@@ -190,22 +190,5 @@
   [^NetcdfFile nc]
   (-variables->vector (.getVariables nc)))
 
-(defn read-scalar
-  "Reads a scalar variable. The `v` argument is a variable map returned from a
-  call to `theophilusx.netcdf.variables/variables` or
-  `theophilusx.netcdf.variables/variable'. Will throw an exception if the
-  variable is not a scalar variable or the data type of the variable is not
-  recognised."
-  [v]
-  (when (not (:is-scalar? v))
-    (throw (Exception. (str (:name v) " not a scalar variable"))))
-  (condp = (:type v)
-    :byte   (.readScalarByte (:obj v))
-    :double (.readScalarDouble (:obj v))
-    :float  (.readScalarFloat (:obj v))
-    :int    (.readScalarInt (:obj v))
-    :long   (.readScalarLong (:obj v))
-    :short  (.readScalarShort (:obj v))
-    :string (.readScalarString (:obj v))
-    (throw (Exception. "Unknown data type of " (:type v))))) 
+
 

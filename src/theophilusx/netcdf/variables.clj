@@ -209,19 +209,3 @@
     :string (.readScalarString (:obj v))
     (throw (Exception. "Unknown data type of " (:type v))))) 
 
-(defn read-slice [v origin size]
-  (.read (:obj v) (int-array origin) (int-array size)))
-
-(defn read-value [v origin]
-  (let [size (take (count origin) (range 1 2 0))
-        values (read-slice v origin size)]
-    (condp = (:type v)
-      :boolean (.getBoolean values 0)
-      :byte (.getByte values 0)
-      :char (.getChar values 0)
-      :double (.getDouble values 0)
-      :float (.getFloat values 0)
-      :int (.getInt values 0)
-      :long (.getLong values 0)
-      :object (.getObject values 0)
-      (throw (Exception. (str "Unknown type " (:type v) " for variable " (:name v))))))) 

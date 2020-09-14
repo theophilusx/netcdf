@@ -40,4 +40,4 @@
   [v origin]
   (let [size   (take (count origin) (range 1 2 0))
         values (read-slice v origin size)]
-    (arrays/get-element values 0))) 
+    (arrays/get-linear-value values 0))) 

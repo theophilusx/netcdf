@@ -10,7 +10,7 @@
    :size        (.getSize a)
    :obj         a})
 
-(defn get-element [a index]
+(defn get-linear-value [a index]
   (condp = (:type a)
     :boolean (.getBoolean (:obj a) index)
     :byte    (.getByte (:obj a) index)
@@ -25,6 +25,11 @@
     (throw (Exception. (str "Unknown type " (:type a) " for array")))))
 
 (defn get-value
+  "Read a value from an array map returned by a call to `read-slice`. The `a`
+  argument is an array map returned from a call to `read-slice`. The function
+  is defined to handle multiple index arguments, depending on the rank of the
+  array. The function supports arrays with a rank from 0 to 7 dimensions. The
+  dimension indices are specified as integers."
   ([a]
    (.get (:obj a)))
   ([a i]

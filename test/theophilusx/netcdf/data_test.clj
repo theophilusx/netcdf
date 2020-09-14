@@ -90,3 +90,26 @@
             (is (= (float 25.04) (arr/get-value d 1 1 0))))
           (testing "get 1 1 1"
             (is (= (float 25.01) (arr/get-value d 1 1 1)))))))))
+
+(deftest read-linear
+  (testing "Reading linear values from array"
+    (reset! test-file (str (:test-data conf) "/access-s.nc"))
+    (with-netcdf [nc @test-file]
+      (let [v (variable nc "tasmax")
+            d (sut/read-slice v [0 300 400] [2 2 2])]
+        (testing "linear read 0"
+          (is (= (float 23.84) (arr/get-linear-value d 0))))
+        (testing "linear read 1"
+          (is (= (float 23.9) (arr/get-linear-value d 1))))
+        (testing "linear read 2"
+          (is (= (float 24) (arr/get-linear-value d 2))))
+        (testing "linear read 3"
+          (is (= (float 24) (arr/get-linear-value d 3))))
+        (testing "linear read 4"
+          (is (= (float 24.94) (arr/get-linear-value d 4))))
+        (testing "linear read 5"
+          (is (= (float 24.96) (arr/get-linear-value d 5))))
+        (testing "linear read 6"
+          (is (= (float 25.04) (arr/get-linear-value d 6))))
+        (testing "linear read 7"
+          (is (= (float 25.01) (arr/get-linear-value d 7))))))))

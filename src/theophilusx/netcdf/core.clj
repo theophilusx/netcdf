@@ -5,7 +5,8 @@
             [theophilusx.netcdf.dimensions :as dims]
             [theophilusx.netcdf.groups :as grps]
             [theophilusx.netcdf.ranges :as rngs]
-            [theophilusx.netcdf.data :as data]))
+            [theophilusx.netcdf.data :as data]
+            [theophilusx.netcdf.arrays :as arrays]))
 
 (def open files/open)
 (def open-in-memory files/open-in-memory)
@@ -48,4 +49,6 @@
 (def read-slice data/read-slice)
 (def read-scalar data/read-scalar)
 
- 
+(def get-linear-value arrays/get-linear-value)
+(def get-value arrays/get-value)
+

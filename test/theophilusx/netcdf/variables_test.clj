@@ -67,25 +67,11 @@
                             (every? key/attributes (keys a)))
                           (:attributes vm))))))))))
 
-(deftest read-scalar
-  (testing (str "Test with file " @test-file)
-    (with-netcdf [nc @test-file]
-      (let [vars (sut/variables nc)]
-        (doseq [v vars]
-          (when (:is-scalar? v)
-            (let [val (sut/read-scalar v)]
-              (testing (str "Read scalar " (:type v) " from " (:name v))
-                (is (not (nil? val)))
-                (is (number? val))))))))))
-
 (deftest variable-testing
   (doseq [f test-files]
     (reset! test-file (str (:test-data conf) "/" f))
     (variables-test)
-    (variable-test)
-    (read-scalar)))
-
-
+    (variable-test)))
 
 (defn test-ns-hook []
   (variable-testing))

@@ -1,7 +1,8 @@
 (ns theophilusx.netcdf.data-test
-  (:require [theophilusx.netcdf.data :as sut]
+  (:require [theophilusx.netcdf.arrays :as arr]
+            [theophilusx.netcdf.data :as sut]
             [theophilusx.netcdf.core :refer [with-netcdf]]
-            [theophilusx.netcdf.variables :refer [variable]]
+            [theophilusx.netcdf.variables :refer [variable variables]]
             [cprop.core :refer [load-config]]
             [clojure.test :refer [deftest testing is]]))
 
@@ -13,6 +14,17 @@
                  "access-s.nc"])
 
 (def test-file (atom ""))
+
+(deftest read-scalar
+  (testing (str "Test with file " @test-file)
+    (with-netcdf [nc @test-file]
+      (let [vars (variables nc)]
+        (doseq [v vars]
+          (when (:is-scalar? v)
+            (let [val (sut/read-scalar v)]
+              (testing (str "Read scalar " (:type v) " from " (:name v))
+                (is (not (nil? val)))
+                (is (number? val))))))))))
 
 (deftest read-values
   (testing "Reading single value"
@@ -44,3 +56,37 @@
           (testing "1 301 401"
             (let [val (sut/read-value v [1 301 401])]
               (is (= (float 25.01) val)))))))))
+
+(deftest read-slice
+  (testing "Reading slice of data"
+    (reset! test-file (str (:test-data conf) "/access-s.nc"))
+    (with-netcdf [nc @test-file]
+      (testing "Reading tasmax variable"
+        (let [v (variable nc "tasmax")
+              d (sut/read-slice v [0 300 400] [2 2 2])]
+          (testing "Array data type"
+            (is (= :float (:type d))))
+          (testing "Array element type"
+            (is (= :float (:elementType d))))
+          (testing "Array rank"
+            (is (= 3 (:rank d))))
+          (testing "Array shape"
+            (is (= [2 2 2] (:shape d))))
+          (testing "Array size"
+            (is (= 8 (:size d))))
+          (testing "get 0 0 0"
+            (is (= (float 23.84) (arr/get-value d 0 0 0))))
+          (testing "get 0 0 1"
+            (is (= (float 23.9) (arr/get-value d 0 0 1))))
+          (testing "get 0 1 0"
+            (is (= (float 24) (arr/get-value d 0 1 0))))
+          (testing "get 0 1 1"
+            (is (= (float 24) (arr/get-value d 0 1 1))))
+          (testing "get 1 0 0"
+            (is (= (float 24.94) (arr/get-value d 1 0 0))))
+          (testing "get 1 0 1"
+            (is (= (float 24.96) (arr/get-value d 1 0 1))))
+          (testing "get 1 1 0"
+            (is (= (float 25.04) (arr/get-value d 1 1 0))))
+          (testing "get 1 1 1"
+            (is (= (float 25.01) (arr/get-value d 1 1 1)))))))))

@@ -1,4 +1,4 @@
 {:linters
  {:unresolved-symbol
-  {:exclude [(netcdf.core/with-netcdf [nc])
-             (netcdf.core/with-memory-netcdf [nc])]}}}
+  {:exclude [(theophilusx.netcdf.core/with-netcdf [nc])
+             (theophilusx.netcdf.core/with-memory-netcdf [nc])]}}}

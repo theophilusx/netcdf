@@ -23,3 +23,21 @@
     :short   (.getShort (:obj a) index)
     :string  (.getString (:obj a) index)
     (throw (Exception. (str "Unknown type " (:type a) " for array")))))
+
+(defn get-value
+  ([a]
+   (.get (:obj a)))
+  ([a i]
+   (.get (:obj a) i))
+  ([a i0 i1]
+   (.get (:obj a) i0 i1))
+  ([a i0 i1 i2]
+   (.get (:obj a) i0 i1 i2))
+  ([a i0 i1 i2 i3]
+   (.get (:obj a) i0 i1 i2 i3))
+  ([a i0 i1 i2 i3 i4]
+   (.get (:obj a) i0 i1 i2 i3 i4))
+  ([a i0 i1 i2 i3 i4 i5]
+   (.get (:obj a) i0 i1 i2 i3 i4 i5))
+  ([a i0 i1 i2 i3 i4 i5 i6]
+   (.get (:obj a) i0 i1 i2 i3 i4 i5 i6)))

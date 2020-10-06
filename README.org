@@ -33,6 +33,8 @@ map has keys representing key information about the underlying object e.g.
 which contains the raw underlying Java object. This allows easy access to
 additional Java library operations based on Clojure's Java interop facilities.
 
+Codox generated documentation can be found at [[https://theophilusx.github.io/netcdf/][https://theophilusx.github.io/netcdf]]
+
 ** Name Spaces 
 
 The following name spaces are implemented by the library. 

@@ -20,6 +20,8 @@ The most frequently used functions in this library are all aliased in the `theop
 
 Most of the interface is based on Clojure maps. Each key NetCDF data structure is represented as a Clojure map (variables, dimensions, attributes, etc). Each map has keys representing key information about the underlying object e.g. `:name`, `:type`, `:size` etc. In addition, each map also contains an `:obj` key which contains the raw underlying Java object. This allows easy access to additional Java library operations based on Clojure's Java interop facilities.
 
+Codox generated documentation can be found at [https://theophilusx.github.io/netcdf](https://theophilusx.github.io/netcdf/)
+
 ## Name Spaces<a id="sec-2-1"></a>
 
 The following name spaces are implemented by the library.
